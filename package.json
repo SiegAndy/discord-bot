@@ -1,0 +1,26 @@
+{
+  "name": "discord-bot",
+  "version": "1.0.0",
+  "main": "bot_main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/opus": "^0.3.3",
+    "@discordjs/uws": "^10.149.0",
+    "axios": "^0.21.1",
+    "cheerio": "^1.0.0-rc.10",
+    "discord": "^0.8.2",
+    "discord.js": "^12.2.0",
+    "dotenv": "^10.0.0",
+    "fs": "0.0.1-security",
+    "naudiodon": "^2.2.4",
+    "nodemon": "^2.0.7",
+    "tail": "^2.0.4"
+  },
+  "devDependencies": {},
+  "description": ""
+}

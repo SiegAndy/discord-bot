@@ -1,0 +1,32 @@
+{
+    "_attrs": {
+        "ff14": {
+            "auto_mode": false,
+            "last_enter_party_time": "2020-06-27T19:44:13.0000000-04:00",
+            "last_modify_time": ""
+        }
+    },
+    "450932735117230082": {
+        "userName": "29582",
+        "userID": "450932735117230082",
+        "message": [],
+        "playlist": [],
+        "ff14": {
+            "server_region": "NA",
+            "data_center": "Aether",
+            "server": "Sargatanas",
+            "character_name": "Joe Joe"
+        }
+    },
+    "483897747137626116": {
+        "userID": "483897747137626116",
+        "message": [],
+        "playlist": [],
+        "ff14": {
+            "server_region": "NA",
+            "data_center": "Aether",
+            "server": "Sargatanas",
+            "character_name": "T'aldarim Annie"
+        }
+    }
+}
