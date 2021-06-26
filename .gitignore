@@ -1,8 +1,11 @@
 .env
 .log
+.json
+.gitignore
+new.txt
 backup.txt
 crash.log
 msgs.json
-new.txt
-.json
+commandlines
+VS-js.code-workspace
 node_modules/
