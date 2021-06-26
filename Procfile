@@ -1,0 +1,1 @@
+worker: node bot_main.js
