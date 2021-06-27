@@ -1,6 +1,6 @@
 const loadstone = require("./loadstone.js");
 const crawler = require("./web_crawler.js");
-const fflogs = require("./fflogs_analysis.js");
+const fflogs = require("./fflogs_analysis_new.js");
 const Discord = require('discord.js');
 const fs = require("fs");
 // const portAudio = require('naudiodon');
@@ -209,6 +209,7 @@ function server_to_data_center(server_name){
     return;
 }
 
+// need to change: store ID of ff14 character into msgs.json or establish a database with table ff14_info and discord_info
 async function embeded_ff14(message){
     let character_info = await loadstone.find_character(message);
     if(character_info === undefined){return;}

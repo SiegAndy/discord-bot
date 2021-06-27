@@ -1,11 +1,12 @@
-const axios = require('axios');
-const fs = require('fs');
-const fs_promises = require('fs').promises;
-const filesystem = require('./filesystem.js');
+// const fs = require('fs');
+// const fs_promises = require('fs').promises;
+// const party_member = require('./Data/party_member.json');
+// const { promisify } = require('util');
+// const sleep = promisify(setTimeout);
+
 const auto_fflogs = require('./auto_fflogs.js');
-const party_member = require('./Data/party_member.json');
-const { promisify } = require('util');
-const sleep = promisify(setTimeout);
+const axios = require('axios');
+
 
 
 
@@ -15,6 +16,15 @@ function getProperty(inputObj, target){
 	let index = names.findIndex((input) => input === target);
 	if(index === -1){return {found: false, value: -1};}
 	else{return {found: true, value: values[index]};}
+}
+
+function promising(func, func_args, resolve_args, msg){
+  return new Promise(async function(resolve, rejects){
+      if(func(func_args)){
+          resolve(resolve_args);
+      }
+      rejects(msg);
+  });
 }
 
 class Success {
@@ -38,7 +48,7 @@ class Failure {
     bool(){
       return false;
     }
-    then(f) {
+    then(sth) {
       return this;
     }
 }
@@ -139,29 +149,37 @@ class FluentFFlogs{
   }
 
   print_highest_percentile(encounterName, difficulty){
+    let root = this;
+    return new Promise(async function(resolve, rejects){
+      let result_array = root.fromEncounter(encounterName);
+      if(result_array.length = 0){rejects(`No fight record fit in this fight: ${encounterName}`);}
 
-    let result_array = this.fromEncounter(encounterName);
-    if(result_array.length = 0){return new Failure("No fight record fit in this fight: " + encounterName);}
+      result_array = result_array.difficulty(difficulty);
+      if(difficulty === 100) {difficulty = "normal";}
+      else if(difficulty === 101) {difficulty = "savage";}
+      else{rejects(`error to find fight mode number: ${difficulty}, please choose from 100(normal)/101(savage)!`);}
+      if(result_array.length = 0){rejects(`No fight record fit in this difficulty: ${difficulty}`);}
 
-
-    result_array = result_array.difficulty(difficulty);
-    if(difficulty === 100) {difficulty = "normal";}
-    else if(difficulty === 101) {difficulty = "savage";}
-    else{return new Failure(`error to find fight mode number: ${difficulty}, please choose from 100(normal)/101(savage)!`);}
-    if(result_array.length = 0){return new Failure("No fight record fit in this difficulty: " + difficulty);}
-
-    result_array = result_array.highest_percentile();
-    if(Object.getOwnPropertyNames(result_array).length === 0){return new Failure("No fight record fit in this condition.");}
-    if(Object.getOwnPropertyNames(result_array).length > 19){return new Failure("Error happened in highest_percentile, more porperties appeared.");}
-    if(result_array.percentile === -1){return new Failure("Character: " + result_array.characterName + ", has no record fit in this fight: " + encounterName + ", in this difficulty: " + difficulty);}
-    
-    return new Success([result_array.characterName, result_array.spec, encounterName, difficulty, Math.round(result_array.percentile).toString(), result_array.total.toString()]);
+      result_array = result_array.highest_percentile();
+      if(Object.getOwnPropertyNames(result_array).length === 0){rejects("No fight record fit in this condition.");}
+      if(Object.getOwnPropertyNames(result_array).length > 19){rejects("Error happened in highest_percentile, more porperties appeared.");}
+      if(result_array.percentile === -1){rejects(`Character: ${result_array.characterName}, has no record fit in this fight: ${encounterName}, in this difficulty: ${difficulty}`);}
+      
+      return resolve({
+                characterName: result_array.characterName, 
+                spec:result_array.spec, 
+                fight: encounterName, 
+                difficulty: difficulty, 
+                percentile: Math.round(result_array.percentile).toString(), 
+                total_dps: result_array.total.toString()
+              });
+    });
   }
   
   print(){
     this.data.forEach(element => console.log(element));
+  
   }
-
 }
 
 
@@ -221,67 +239,77 @@ function incorrect_format(message){
 }
 
 
-function inner_process(message, responses, server, combat_zone){
+async function inner_process(message, responses, server, combat_zone){
+  return new Promise(async function(resolve, rejects){
     if(combat_zone.length !== 2){message.channel.send("Error expression in find_combat_zone(), output error").then(d_msg => {d_msg.delete({ timeout: 60000 });});return;}
     if(combat_zone[1] === -1){message.channel.send("Error expression in find_combat_zone(), can't find correspond fight.").then(d_msg => {d_msg.delete({ timeout: 60000 });});return;}
-    let result = new FluentFFlogs(responses.data).print_highest_percentile(combat_zone[0], combat_zone[1]);
-    if(result.bool() || (!result.bool() && !has_fight)){
-        //`Character: " + result_array.characterName + ", with Role: " + result_array.spec 
-        //+ ", in Fight: " + encounterName + ", with Mode: " + difficulty 
-        //+ ", has Highest Ranking: " + Math.round(result_array.percentile).toString() 
-        //+ ", with Total DPS: " + result_array.total.toString()`
-        let result_array = result.then((elem)=>elem);
-        message.channel.send(`Character: ${result_array[0]}, with Role: ${result_array[1]}, in Fight: ${result_array[2]} , with Mode: ${result_array[3]}, has Highest Ranking: ${result_array[4]}, with Total DPS: ${result_array[5]}`)
-                       .then(d_msg => {d_msg.delete({ timeout: 120000 });});
-        return new Success(["NA", server, result_array[0]]);
-    }
-    else{
-      message.channel.send(result.then()).then(d_msg => {d_msg.delete({ timeout: 60000 });});
-    }
+    try {
+      let result = await new FluentFFlogs(responses.data).print_highest_percentile(combat_zone[0], combat_zone[1]);
 
+      //`Character: " + result_array.characterName + ", with Role: " + result_array.spec 
+      //+ ", in Fight: " + encounterName + ", with Mode: " + difficulty 
+      //+ ", has Highest Ranking: " + Math.round(result_array.percentile).toString() 
+      //+ ", with Total DPS: " + result_array.total.toString()`
+
+      message.channel.send(`Character: ${result.characterName}
+                            , with Role: ${result.spec}
+                            , in Fight: ${result.fight} 
+                            , with Mode: ${result.difficulty}
+                            , has Highest Ranking: ${result.percentile}
+                            , with Total DPS: ${result.total_dps}`)
+                      .then(d_msg => {d_msg.delete({ timeout: 120000 });});
+      resolve(["NA", server,result.characterName]);
+    } catch (error) {
+      message.channel.send(error).then(d_msg => {d_msg.delete({ timeout: 60000 });});
+    }
+  });
 }
 
 
 async function get_content_has_server(message, combat_zone, server, URL){
+  return new Promise(async function(resolve, rejects){
     try{
         const responses = await axios.get(URL);
-        return inner_process(message, responses, server, combat_zone);
+        const result = await inner_process(message, responses, server, combat_zone);
+        resolve(result);
     }
     catch(error){
-        //console.log(error)
-        incorrect_format(message);
+      console.log("Error happened in get_content_has_server() async function.")       
     }
-    return new Failure("unknown error happened in get_content_has_server() async function.");
+  });
 }
 
 async function get_content(message, combat_zone, server, URL){
+  return new Promise(async function(resolve, rejects){
     try{
-        const responses = await axios.get(URL);
-        //console.log(server)
-        
+        //URL = "https://www.fflogs.com/v1/parses/character/T'aldarim%20Annie/Sargatanas/NA?metric=dps&bracket=0&compare=0&timeframe=historical&api_key=60cf5fc24a60225a8d6e343ba3f31a21"
+        const responses = await axios.get(URL);       
         message.channel.send("**").then(d_msg => {d_msg.delete({ timeout: 120000 });});
-
         message.channel.send("Find Character in Server: " + server).then(d_msg => {d_msg.delete({ timeout: 120000 });});
-        return inner_process(message, responses, server, combat_zone);
+        const result = await inner_process(message, responses, server, combat_zone);
+        resolve(result);
         //message.channel.send("**").then(d_msg => {d_msg.delete({ timeout: 60000 });});
     }
     catch(error){
         //message.channel.send("**").then(d_msg => {d_msg.delete({ timeout: 60000 });});
         //message.channel.send("Can't find Character in Server: " + server).then(d_msg => {d_msg.delete({ timeout: 60000 });});
-        ;//message.channel.send("**").then(d_msg => {d_msg.delete({ timeout: 60000 });});
+        //message.channel.send("**").then(d_msg => {d_msg.delete({ timeout: 60000 });});
+        console.log(error);
+        console.log("unknown error happened in get_content() async function.");
     }
-    return new Failure("unknown error happened in get_content() async function.");
+    //return new Failure("unknown error happened in get_content() async function.");
+  });
 }
 
 async function iterate_combat_zone(message, combats, server, URL){ //iterate each possible combat zone
     let combat_zone = [];
     for(let i = 0; i < combats.length; ++i){
         combat_zone = find_combat_zone(combats[i]);
-        return await get_content(message, combat_zone, server, URL).then((elem)=>elem);
+        return await get_content(message, combat_zone, server, URL);
     }
 }
 async function combat_server(message, has_server, has_fight, server, combatName, URL){ // check if input have fight and server
-    let combats = ["e5", "e5s","e6","e6s","e7","e7s","e8","e8s"];	
+    let combats = ["e9", "e9s","e10","e10s","e11","e11s","e12","e12s"];	
     if(has_server){
         if(has_fight){
             return await get_content_has_server(message, find_combat_zone(combatName.toLowerCase()), server, URL);
@@ -292,8 +320,8 @@ async function combat_server(message, has_server, has_fight, server, combatName,
         }
     }
     else{
-        if(has_fight){
-            return await get_content(message, find_combat_zone(combatName.toLowerCase()), server, URL).then((elem)=>elem);
+        if(has_fight){            
+            return await get_content(message, find_combat_zone(combatName.toLowerCase()), server, URL); 
         }
         else{
             return iterate_combat_zone(message, combats, server, URL);
@@ -301,6 +329,8 @@ async function combat_server(message, has_server, has_fight, server, combatName,
     }
     
 }
+
+/* Beginning of auto rank checking process*/
 
 async function inner_check_rank(message, serverRegion,server_name,character_name,combatName){
   let character_firstName = character_name.split(' ')[0];
@@ -365,7 +395,7 @@ async function get_members(message){// no return; player_info in file
   
 }
 
-
+/* End of auto rank checking process*/
 
 
 
@@ -381,7 +411,7 @@ module.exports = {
 
   check_rank: async function (message){
         let default_URL = "https://www.fflogs.com/v1/parses/character";
-
+        
         //new attributes
         let original = message.content.slice(8); // get attributes String
         let variables = [];
@@ -421,7 +451,7 @@ module.exports = {
         }
 
         //preset attributes
-        let api_key = "&api_key=60cf5fc24a60225a8d6e343ba3f31a21";
+        let api_key = `&api_key=${process.env.FFLOGS_API_KEY}`;
         let serverRegion = "/NA";
         let metric = "?metric=dps";
         let bracket = "&bracket=0";
@@ -444,15 +474,13 @@ module.exports = {
         }
         else{
             let servers = ["Adamantoise", "Cactuar", "Faerie", "Gilgamesh", "Jenova", "Midgardsormr", "Sargatanas", "Siren"];
-            let i = 0;
-            while(i < servers.length){
-                let URL = default_URL + "/" + character_firstName + "%20" + character_lastName + "/" + servers[i] + serverRegion + metric + bracket + compare + timeframe + api_key;
-                message.channel.send("Searching Server: " + servers[i]).then(d_msg => {d_msg.delete({ timeout: 60000 });});
-                
-                let info = await combat_server(message, has_server, has_fight, servers[i], combatName, URL);
-                //if(info === undefined){message.channel.send("Unknown error when retrieving Character information.").then(d_msg => {d_msg.delete({ timeout: 60000 });}); return data;}
+            for(server of servers){
+                let URL = default_URL + "/" + character_firstName + "%20" + character_lastName + "/" + server + serverRegion + metric + bracket + compare + timeframe + api_key;                             
+                // console.log(server);
+                let info = await combat_server(message, has_server, has_fight, server, combatName, URL);
+                message.channel.send(`Searching Server: ${server}`).then(d_msg => {d_msg.delete({ timeout: 60000 });});
+                if(info === undefined){message.channel.send("Unknown error when retrieving Character information.").then(d_msg => {d_msg.delete({ timeout: 60000 });}); return data;}
                 if(info[0] !== undefined){data = info;}
-                ++i;
             }
     
         }
@@ -465,3 +493,5 @@ module.exports = {
   },
     
 }
+// message = {content : "~fflogs T'aldarim Annie E9s Sargatanas"};
+// module.exports.check_rank(message);

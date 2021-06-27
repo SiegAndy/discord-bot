@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({path: "C:/Users/zc470/Desktop/Extra/Discord-bot/.env"});
 const Discord = require('discord.js');
 const client = new Discord.Client();
 client.msgs = require("./msgs.json");
