@@ -1,6 +1,6 @@
 const loadstone = require("./loadstone.js");
 const crawler = require("./web_crawler.js");
-const fflogs = require("./fflogs_analysis_new.js");
+const fflogs = require("./fflogs_analysis.js");
 const Discord = require('discord.js');
 const fs = require("fs");
 // const portAudio = require('naudiodon');
