@@ -1,12 +1,12 @@
 const mysql = require('mysql');
-// const db = require('database.db');
+require('dotenv').config({path: "C:/Users/zc470/Desktop/Extra/Discord-bot/.env"});
 
 class Database{
     constructor() {
         this.con = mysql.createConnection({
             host: "localhost",
-            user: "root",
-            password: "Zengchang14"
+            user: process.env.DATABASE_USR,
+            password: process.env.DATABASE_PWD
         })
 
         this.database = 'discord_database'
@@ -168,33 +168,3 @@ class Database{
         });
     }
 }
-
-
-// let a = new Database();
-
-// function populate(){
-//     // a.insert(discord_id=483897747137626116, privilege=3, discord_name="SiegAndy#2174")
-//     // a.insert(discord_id=450932735117230082, privilege=0, discord_name="29582#1665")
-//     // a.insert_ff14(483897747137626116, 25526101, "T'aldarim", "Annie")
-//     // a.insert_ff14(450932735117230082, 22685163, "Joe", "Joe")
-//     // a.delete(483897747137626116);
-//     // a.delete(450932735117230082);
-// }
-
-// async function test(){
-//     let result = await a.user_info(483897747137626116);
-//     console.log(result);
-// }
-
-
-// // a.con.query("INSERT INTO ??(discord_id, discord_refers) VALUES(?, ?)"
-// //             , [a.referstable, 483897747137626116, 1] 
-// //             , function (err, result, fields) {if (err) throw err;});
-
-// async function tt(){
-//     populate();
-//     await test();
-//     //a.destroy();
-// }
-
-// tt();
