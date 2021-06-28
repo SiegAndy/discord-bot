@@ -6,11 +6,8 @@ let loadstone_private_key = `&private_key=${process.env.LOADSTONE_PRIVATE_KEY}`;
 function add_private_key(URL) {return URL + loadstone_private_key;};
 
 module.exports = {
-    find_character: async function (message, flag=false, character_name='', server=''){
-        // return character information in format: 
-        //{"Avatar":"https:\/\/img2.finalfantasyxiv.com\/f\/df3c8e935f7f3bec0c2bd749d1b132ec_ba22853447012a24cee115315d6a5bebfc0_96x96.jpg?1593186005"
-        //,"FeastMatches":0,"ID":25526101,"Lang":"JA\/EN\/DE\/FR","Name":"T'aldarim Annie","Rank":null,"RankIcon":null,"Server":"Sargatanas\u00a0(Aether)"}
-
+    find_character: async function (message, flag=false, lodestone=-1, character_name='', server=''){
+        // Language data now is ignored, since XIVAPI set all of them to NULL when accessing player data.
         async function process(message, responses, character_name, server_name){
             let data = responses.data;
             //console.log(responses)
@@ -53,8 +50,7 @@ module.exports = {
                     //                 , responses.data.Character.Name, responses.data.Character.Server);
                     //     if (Lang) responses.data.Character.Lang = Lang;
                     //     else console.log("Still cant find Language data!");
-                    // }
-                    
+                    // }                    
                     return returned;
                 }
             }   
@@ -68,12 +64,19 @@ module.exports = {
         let search_by_name = "search?name=";
         let contents = null;
         let Lang = null;
+        //with flag means input is inner function call from current/other file, without flag means input is ~find command.
         if(!flag){
             contents = message.content.replace("~find",'').split(' ').splice(1);
         }
         else{
-            contents = character_name.split(' ');
-            contents.push(server);
+            if(lodestone > 0){
+                contents = [lodestone];
+            }
+            else{
+                contents = character_name.split(' ');
+                contents.push(server);
+            }
+            
         }
         
         if(contents.length === 1){ // ff14 lodestone id

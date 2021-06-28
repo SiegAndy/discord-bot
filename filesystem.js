@@ -2,18 +2,22 @@
 // const fs = require("fs");
 const loadstone = require("./loadstone.js");
 const fflogs = require("./fflogs_analysis.js");
+const {Database} = require('./Database/Database_postgre.js');
 const {ff14,user,output_json,timeout_send,server_to_server,server_to_server_region,server_to_data_center} = require('./Classes.js');
 const Discord = require('discord.js');
-
-// const portAudio = require('naudiodon');
 
 
 // need to change: store ID of ff14 character into msgs.json or establish a database with table ff14_info and discord_info
 async function embeded_ff14(message, flag=false, character_name="", server=""){
     let character_info = null;
-    character_info = await loadstone.find_character(message,flag,character_name,server);
+    try {
+        character_info = await loadstone.find_character(message,flag,-1,character_name,server);
+    } catch (error) {
+        timeout_send(message, error);
+        console.log(message, error);
+    }   
 
-    if(character_info === undefined){return;}
+    if(character_info === null){return;}
     let ff14_embed = new Discord.MessageEmbed()
 								.setColor('#63d6ff')
 								.setAuthor(character_info.Name, character_info.Avatar)
@@ -32,33 +36,93 @@ async function embeded_ff14(message, flag=false, character_name="", server=""){
 }
 
 
-
-
-let roleNames = {max: ['GM', 'Administrator',], second: ['GM', 'Administrator','Refugee','Tester',]};
-const sampleRate = 48000;
-let  audioDeviceId = null; //4 is virtual cable; 2 is voicemeeter
-// let portInfo = portAudio.getHostAPIs();
-// let defaultDeviceId = portInfo.HostAPIs[portInfo.defaultHostAPI].defaultOutput;
-// let defaultDevice = portAudio.getDevices().filter(device => device.id === defaultDeviceId);
-let ai = null;
-let voiceChannel = null;
-let isActive = false;
-let stream = new require('stream').Transform()
-stream._transform = function (chunk, encoding, done) {
-  this.push(chunk);
-  done();
-}
-
-
-
 module.exports = {
-    card: async function(message, client_msgs){
-        if(client_msgs[message.author.id] === undefined){
-            client_msgs[message.author.id] = new user().set_name(message.author.username).set_userID(message.author.id).out_json();
-            output_json(message, client_msgs, "New user added.");
-        }
+    create_user: async function(message){
+        const pool = new Database();
+        //~create [discord_id] [discord_username] [privilege] [lodestone]
+        //~create 483897747137626116 SiegAndy 3 25526101
+        function warning_helper(input){
+            return new Promise(async function(resolve, rejects){                           
+                if(!Number.isInteger(input)){
+                    rejects("Please enter a valid discord id (integer)!");                   
+                }
+                resolve("Success");
+            });
+        }       
+        
+        let content = message.content.replace("~create",'').split(' ').slice(1);
+        
+        try {
+            if(content.length === 0){//~create
+                await pool.insert(message.author.id, message.author.username);
+                timeout_send(message, `Thank you for using this bot!\nNew user ${message.author.username} added.`);
+            }
+            else if(content.length > 0 && content.length < 5){
+                //await warning_helper(content[0]);
+                let username;
+                if(content.length === 1){//~create [privilege]
+                    username = message.author.username;
+                    await pool.insert(message.author.id, message.author.username, parseInt(content[0]));
+                }
+                else if(content.length === 2){//~create [discord_id] [discord_username]
+                    username = content[1];
+                    await pool.insert(content[0], content[1]);
+                }
+                else if(content.length === 3){//~create [discord_id] [discord_username] [privilege]
+                    username = content[1];
+                    await pool.insert(content[0], content[1], parseInt(content[2]));
+                }           
+                else if(content.length === 4){//~create [discord_id] [discord_username] [privilege] [lodestone]
+                    //console.log(content)
+                    let character_info = await loadstone.find_character(message,true, parseInt(content[3]));
+                    username = content[1] + " with ff14 character: " + character_info.Name;
+                    // console.log(character_info)
+                    await pool.insert(content[0], content[1], parseInt(content[2]), parseInt(content[3])
+                        , character_info.Name.split(' ')[0], character_info.Name.split(' ')[1], character_info.Server
+                        , server_to_data_center(character_info.Server), server_to_server_region(character_info.Server));
+                }     
+                timeout_send(message, `Thank you for using this bot!\nNew user: ${username} added.`);
+            }
+            else{
+                throw `More than 4 arguments accepted ${content}, invalid command.`;
+            }
+            
+        } catch (error) {
+            if(error)timeout_send(message, "Error happened during user creation process.");
+            console.log(error);
+            pool.destroy();
+        }   
+        pool.destroy();
+    },
+
+    card: async function(message){
+        /*check whether current user is logged in database
+        if not, create a new user with id and username input, default privilege=0    
+        */
+        const pool = new Database();
+        
         let ff14_character = "No character Linked";
-        if(client_msgs[message.author.id].ff14.character_name !== undefined){ff14_character = client_msgs[message.author.id].ff14.character_name}
+        let cur_user = null;
+        try {
+            cur_user = await pool.user_info(message.author.id);
+            if (cur_user.rowCount === 0){
+                await pool.insert(message.author.id, message.author.username);
+                timeout_send(message, "Thank you for using this bot!\nNew user added.");
+                pool.destroy();
+                pool= new Database();
+                
+                cur_user = await pool.user_info(message.author.id);
+            }
+            
+            if (cur_user === null){throw "Error, current user still have not been added to database!";}
+            if(cur_user.rows[0].ff14_loadstone !== undefined) 
+                ff14_character = cur_user.rows[0].fname + " " + cur_user.rows[0].lname;
+        } catch (error) {
+            console.log(message, error);
+            timeout_send(message, error);
+        }
+        pool.destroy();
+        console.log(cur_user.rows[0])
         let embed_ff14 = undefined;
         let embed = new Discord.MessageEmbed()
 								.setColor('#63d6ff')
@@ -69,11 +133,14 @@ module.exports = {
 								{ name: 'User ID', value: message.author.id, inline: true },
                                 { name: 'FF14 Character', value: ff14_character, inline: true },);
                                 
-        if(client_msgs[message.author.id].ff14.character_name !== undefined){
+        if (cur_user === null){throw "Error, current user still have not been added to database!";}
+        if(cur_user.rows[0].ff14_loadstone !== undefined){
             embed_ff14 = await embeded_ff14(message, true
-                                            , client_msgs[message.author.id].ff14.character_name
-                                            , client_msgs[message.author.id].ff14.server);
+                                            , ff14_character
+                                            , cur_user.rows[0].server);
         }
+
+        
         timeout_send(message, embed);
         if(embed_ff14 === undefined) {return;}
 		timeout_send(message, embed_ff14);
@@ -125,69 +192,5 @@ module.exports = {
     }, 
 
     auto_check_party_member: function (message){fflogs.auto_check_party_member(message);},
-
-    // local_relay: async function(message){
-    //     console.log("=====================================================")
-    //     if (!message.guild) return;
-    //     if (message.author.bot) return;
-    //     //audioDeviceId 4 is virtual cable; 2 is voicemeeter
-    //     voiceChannel = message.member.voice.channel;      
-        
-    //     if(!isEligible(message,2)){return;}
-    //     if(message.content.length <= 8){
-    //         if (!voiceChannel) {message.reply('Please join a VoiceChannel first, then summon me.');return;}
-    //         if(isActive){message.reply('I am already in a voice channel, please disconnect first then summon me.');return;}
-    //         else if(!isActive){
-    //             isActive = true;
-    //             // Only try to join the sender's voice channel if they are in one themselves
-    //             message.reply('At your service.');
-    //             if(message.content.substring(7) === '1'){audioDeviceId = 1;}
-    //             else if(message.content.substring(7) === '2'){audioDeviceId = 2;}
-    //             else if(message.content.substring(7) === '3'){audioDeviceId = 3;}
-    //             else if(message.content.substring(7) === '4'){audioDeviceId = 4;}
-    //             else if(message.content.substring(7) === '5'){audioDeviceId = 5;}
-    //             voiceChannel.join()
-    //             .then(connection => {
-    //             ai = new portAudio.AudioIO({
-    //                 inOptions: {
-    //                 channelCount: 2,
-    //                 sampleFormat: portAudio.SampleFormat16Bit,
-    //                 sampleRate: sampleRate,
-    //                 deviceId: audioDeviceId !== null ? audioDeviceId : defaultDevice.id // Use -1 or omit the deviceId to select the default device
-    //                 //deviceId: 2
-    //                 }
-    //             });
-    //             // pipe the audio input into the transform stream and
-    //             ai.pipe(stream);
-    //             // the transform stream into the discord voice channel
-    //             const dispatcher = connection.play(stream, {type: 'converted'});
-    //             // start audio capturing
-    //             ai.start();
-                
-            
-    //             dispatcher.on('debug', (info) => console.log(info));
-    //             dispatcher.on('end', () => voiceChannel.leave());
-    //             dispatcher.on('error', (error) => console.log(error));
-        
-    //             })
-    //             .catch(error => {
-    //             console.log(error);
-    //             message.reply(`Cannot join VoiceChannel, because ${error.message}`);
-    //             isActive = false;
-    //             });
-    //         }      
-    //     }
-    //     // leave the channel
-    //     else if (message.content ==='~relay quit') {
-    //         if(!isActive){await message.reply(`I am not in the voice channel currently.`); return;}  
-    //         voiceChannel.leave();
-    //         isActive = false;
-    //         message.reply('Leaving!');
-    //         voiceChannel = undefined;
-    //         ai.quit();
-    //         ai.unpipe(stream);
-    //     }
-    //     else{message.reply(`Unknown input "${message.content}".`); return;}
-    // }
     
 }

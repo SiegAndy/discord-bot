@@ -20,6 +20,7 @@ client.on('ready', () => {
 });
 
 client.on('message', message => {
+	if(message.author.bot){return;}
 
 	if (message.content.startsWith(prefix)){
 		timeout_send(message, "WARNING!!\nDue to the change of storage and filesystem functions, most of functions are deprecated!\nPlease be aware correct function may result unexpected result!!", 60000);
@@ -34,8 +35,11 @@ client.on('message', message => {
 				else if(cmdmsg.length === 2){cmds.randomNumber(message, cmdmsg[1]);}
 				else{help(message);}
 				break;
+			case "create":
+				cmds.create_user(message);
+				break;
 			case "whoami":
-				cmds.card(message, client.msgs);
+				cmds.card(message);
 				break;			
 			case "fflogs":
 				cmds.check_rank(message, client.msgs);
@@ -55,6 +59,9 @@ client.on('message', message => {
 				break;
 			case "m":
 				timeout_send(message, `!market Aether ${message.content.slice(3)}`)
+				break;
+			case "test":
+				cmds.test(message);
 				break;
 
 			// case "write": 

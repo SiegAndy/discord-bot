@@ -1,6 +1,7 @@
 
 const files = require('./filesystem.js');
 const {help} = require('./Classes.js');
+const {local_relay} = require('./relay.js');
 
 module.exports = {
 
@@ -21,7 +22,9 @@ module.exports = {
     
     randomNumber: function(message,number){message.channel.send(Math.round(Math.random()*number));},
 
-    card: function(message, client_msgs){files.card(message, client_msgs);},
+    create_user: function (message){files.create_user(message);},
+
+    card: function(message, client_msgs){files.card(message);},
     
     check_rank: function(message, client_msgs){files.check_rank(message, client_msgs);},
 
@@ -29,5 +32,9 @@ module.exports = {
 
     auto_check_party_member: function(message){files.auto_check_party_member(message);},
 
-    local_relay: function(message){files.local_relay(message);}
+    local_relay: function(message){local_relay(message);},
+
+    test: function(message){
+        console.log(message.author);
+    }
 }
