@@ -1,7 +1,7 @@
 
 const files = require('./filesystem.js');
 const {help} = require('./Classes.js');
-const {local_relay} = require('./relay.js');
+//const {local_relay} = require('./relay.js');
 
 module.exports = {
 
@@ -32,7 +32,7 @@ module.exports = {
 
     auto_check_party_member: function(message){files.auto_check_party_member(message);},
 
-    local_relay: function(message){local_relay(message);},
+    //local_relay: function(message){local_relay(message);},
 
     test: function(message){
         console.log(message.author);
