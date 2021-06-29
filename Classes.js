@@ -122,6 +122,16 @@ function getProperty(inputObj, target){
 	else{return {found: true, value: values[index]};}
 }
 
+function string_is_int(input,flag=false,msg=""){ //if has flag == true, return a promise
+  if (!flag){return Number.isInteger(parseInt(input))}
+  return new Promise(async function(resolve, rejects){                           
+      if(!Number.isInteger(parseInt(input))){
+          rejects(msg);                   
+      }
+      resolve(true);
+  });
+}
+
 class FluentFFlogs{
     constructor(jsonData) {
       this.data = jsonData;
@@ -344,11 +354,11 @@ exports.user = user;
 exports.server_to_server = server_to_server;
 exports.server_to_server_region = server_to_server_region;
 exports.server_to_data_center = server_to_data_center;
+exports.string_is_int=string_is_int;
 exports.output_json = output_json;
 exports.timeout_send = timeout_send;
 exports.user_message_delete = user_message_delete;
 exports.help = help;
-
 
 exports.server_list = server_list;
 exports.dc_server = dc_server;

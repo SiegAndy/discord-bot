@@ -259,8 +259,8 @@ module.exports = {
 
         //preset attributes
         let api_key = `&api_key=${process.env.FFLOGS_API_KEY}`;
-        let serverRegion = "/NA";
-        let metric = "?metric=dps";
+        let serverRegion = "/NA?";
+        let metric = "metric=dps";
         let bracket = "&bracket=0";
         let compare = "&compare=0";
         let timeframe = "&timeframe=historical"; // historical/today
