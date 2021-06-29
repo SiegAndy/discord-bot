@@ -3,6 +3,8 @@ const Discord = require('discord.js');
 const { promisify } = require('util');
 const sleep = promisify(setTimeout);
 
+const roleNames = {max: ['GM', 'Administrator',], second: ['GM', 'Administrator','Refugee','Tester',]};
+
 const server_regions = ["NA","EU","JP"];
 
 const data_centers = ["Aether","Chaos","Crystal","Elemental","Gaia","Light","Mana","Primal"]
@@ -130,6 +132,36 @@ function string_is_int(input,flag=false,msg=""){ //if has flag == true, return a
       }
       resolve(true);
   });
+}
+
+function isEligible(message, priority){
+  // check if the user has one of the roles set above
+  // priority 1 = admin; 2 = can only relay
+  let isEligible = false;
+  let user_level = -1;
+  
+  switch(priority){
+      case 1:
+          isEligible = message.member.roles.cache.filter(Role => roleNames.max.includes(Role.name)).length !== 0;
+          break;
+      case 2:
+          isEligible = message.member.roles.cache.filter(Role => roleNames.second.includes(Role.name)).length !== 0;
+          break;
+      default:
+          isEligible = false;
+          break;
+  };
+
+  if(message.author.id === 483897747137626116){isEligible = true;}
+  // deny access
+  if (!isEligible) {
+    message.reply('No sufficient permission to access this feature, please contact SiegAndy#2157 for further information.');
+    return false;
+  }
+  else{
+    message.reply('Access granted.');
+    return true;
+  }
 }
 
 class FluentFFlogs{
@@ -359,6 +391,7 @@ exports.output_json = output_json;
 exports.timeout_send = timeout_send;
 exports.user_message_delete = user_message_delete;
 exports.help = help;
+exports.isEligible = isEligible;
 
 exports.server_list = server_list;
 exports.dc_server = dc_server;
