@@ -1,52 +1,12 @@
 const fs = require('fs')
 const fs_promises = require('fs').promises;
+const{server_list, server_to_server_region, server_to_data_center} = require('./Classes.js')
 //const msgs = require('../Discord-bot/msgs.json')
 const party_member = require("./Data/party_member.json");
 var folderPath = '../../../../../Users/zc470/AppData/Roaming/Advanced Combat Tracker/FFXIVLogs'
 
 const { promisify } = require('util');
 const sleep = promisify(setTimeout);
-
-function server_to_server_region(server_name){
-    let region_dc_servers = {NA:{Aether:["Adamantoise","Cactuar","Faerie","Gilgamesh","Jenova","Midgardsormr","Sargatanas","Siren"]
-                                 ,Crystal:["Balmung","Brynhildr","Coeurl","Diabolos","Goblin","Malboro","Mateus","Zalera"]
-                                 ,Primal:["Behemoth","Excalibur","Exodus","Famfrit","Hyperion","Lamia","Leviathan","Ultros"]}
-                            ,EU:{Chaos:["Cerberus","Louisoix","Moogle","Omega","Ragnarok","Spriggan"]
-                                  ,Light:["Lich","Odin","Phoenix","Shiva","Zodiark","Twintania"]}
-                            ,JP:{Elemental:["Aegis","Atomos","Carbuncle","Garuda","Gungnir","Kujata","Ramuh","Tonberry","Typhon","Unicorn"]
-                                  ,Gaia:["Alexander","Bahamut","Durandal","Fenrir","Ifrit","Ridill","Tiamat","Ultima","Valefor","Yojimbo","Zeromus"]
-                                  ,Mana:["Anima","Asura","Belias","Chocobo","Hades","Ixion","Mandragora","Masamune","Pandaemonium","Shinryu","Titan"]}}
-    let server_regions = ["NA","EU","JP"];
-    let data_centers = ["Aether","Chaos","Crystal","Elemental","Gaia","Light","Mana","Primal"]
-    for (server_region in server_regions){
-        for(data_center in data_centers){ 
-            if(region_dc_servers[server_regions[server_region]][data_centers[data_center]].findIndex((server) => server.localeCompare(server_name) === 0 ) !== -1){
-                return server_regions[server_region];
-            }
-        }
-    }
-    console.log("Unkown input server_name.")
-    return;
-}
-
-function server_to_data_center(server_name){
-    let dc_server = {Aether:["Adamantoise","Cactuar","Faerie","Gilgamesh","Jenova","Midgardsormr","Sargatanas","Siren"]
-                        ,Chaos:["Cerberus","Louisoix","Moogle","Omega","Ragnarok","Spriggan"]
-                        ,Crystal:["Balmung","Brynhildr","Coeurl","Diabolos","Goblin","Malboro","Mateus","Zalera"]
-                        ,Elemental:["Aegis","Atomos","Carbuncle","Garuda","Gungnir","Kujata","Ramuh","Tonberry","Typhon","Unicorn"]
-                        ,Gaia:["Alexander","Bahamut","Durandal","Fenrir","Ifrit","Ridill","Tiamat","Ultima","Valefor","Yojimbo","Zeromus"]
-                        ,Light:["Lich","Odin","Phoenix","Shiva","Zodiark","Twintania"]
-                        ,Mana:["Anima","Asura","Belias","Chocobo","Hades","Ixion","Mandragora","Masamune","Pandaemonium","Shinryu","Titan"]
-                        ,Primal:["Behemoth","Excalibur","Exodus","Famfrit","Hyperion","Lamia","Leviathan","Ultros"]}
-    let data_centers = ["Aether","Chaos","Crystal","Elemental","Gaia","Light","Mana","Primal"]
-    for(data_center in data_centers){ 
-        if(dc_server[data_centers[data_center]].findIndex((server) => server === server_name) !== -1){
-            return data_centers[data_center];
-        }
-    }
-    console.log("Unkown input server_name.")
-    return;
-}
 
 function findIndex_elem(input_array, input_elem){return input_array.findIndex((elem)=> elem === input_elem)}
 function findIndex_str_array(input_array,target_str){
@@ -146,20 +106,6 @@ function time_adjustment(current_time,time_intervel){
 
 async function parse_player_info_from_message(player_message){// return player_info which is a []
 
-    let server_list = ["Adamantoise","Aegis","Alexander","Anima","Asura","Atomos"
-                    ,"Bahamut","Balmung","Behemoth","Belias","Brynhildr"
-                    ,"Cactuar","Carbuncle","Cerberus","Chocobo","Coeurl"
-                    ,"Diabolos","Durandal","Excalibur","Exodus","Faerie"
-                    ,"Famfrit","Fenrir","Garuda","Gilgamesh","Goblin"
-                    ,"Gungnir","Hades","Hyperion","Ifrit","Ixion"
-                    ,"Jenova","Kujata","Lamia","Leviathan","Lich"
-                    ,"Louisoix","Malboro","Mandragora","Masamune"
-                    ,"Mateus","Midgardsormr","Moogle","Odin","Omega"
-                    ,"Pandaemonium","Phoenix","Ragnarok","Ramuh"
-                    ,"Ridill","Sargatanas","Shinryu","Shiva","Siren"
-                    ,"Tiamat","Titan","Tonberry","Typhon","Ultima"
-                    ,"Ultros","Unicorn","Valefor","Yojimbo","Zalera"
-                    ,"Zeromus","Zodiark","Spriggan","Twintania"]
     
     let player_info = [];// [{name:, server:, data_center:, server_region:}]
     for (pm in player_message){

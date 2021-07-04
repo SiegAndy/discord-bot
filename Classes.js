@@ -3,6 +3,9 @@ const Discord = require('discord.js');
 const { promisify } = require('util');
 const sleep = promisify(setTimeout);
 
+const webhooks = [ 'https://discord.com/api/webhooks/861092339198722058/zq9CrwrbQPhsB8y-hXQthDq7AWI_F9w8ToRGboCfQSZJvKk5E4shZ27IJ5dQJBtqr18u',
+                  //'https://discord.com/api/webhooks/860982441521709066/xSqqdfqgIG0r_Ir-ghyehMiEYBvWHmO8qoBA-iIbHnKtudKjB0_JB_VWqQcsEzed0AhH',
+                ]
 const roleNames = {max: ['GM', 'Administrator',], second: ['GM', 'Administrator','Refugee','Tester',]};
 
 const server_regions = ["NA","EU","JP"];
@@ -44,6 +47,144 @@ const server_list = ["Adamantoise","Aegis","Alexander","Anima","Asura","Atomos"
                     ,"Ultros","Unicorn","Valefor","Yojimbo","Zalera"
                     ,"Zeromus","Zodiark","Spriggan","Twintania"]
 
+
+const zone_38 = {
+  "id": 38,
+  "name": "Eden's Promise",
+  "frozen": false,
+  "encounters": [
+    {
+      "id": 73,
+      "name": ` Cloud of Darkness`
+    },
+    {
+      "id": 74,
+      "name": `   Shadowkeeper   `
+    },
+    {
+      "id": 75,
+      "name": `    Fatebreaker   `
+    },
+    {
+      "id": 76,
+      "name": `  Eden's Promise  `
+    },
+    {
+      "id": 77,
+      "name": `Oracle of Darkness`
+    }
+  ],
+  "brackets": {
+    "min": 5,
+    "max": 5.5,
+    "bucket": 0.1,
+    "type": "Patch"
+  },
+  "partitions": [
+    {
+      "name": "Standard Comps (5.4)",
+      "compact": "Standard (5.4)",
+      "filtered_name": "5.4",
+      "area": 1
+    },
+    {
+      "name": "Non-Standard Comps (5.4)",
+      "compact": "Non-Standard (5.4)",
+      "area": 1
+    },
+    {
+      "name": "Standard Comps (5.4)",
+      "compact": "Standard (5.4)",
+      "filtered_name": "5.4",
+      "area": 2,
+      "default": true
+    },
+    {
+      "name": "Non-Standard Comps (5.4)",
+      "compact": "Non-Standard (5.4)",
+      "area": 2
+    },
+    {
+      "name": "Standard Comps (5.4)",
+      "compact": "Standard (5.4)",
+      "filtered_name": "5.4",
+      "area": 3,
+      "default": true
+    },
+    {
+      "name": "Non-Standard Comps (5.4)",
+      "compact": "Non-Standard (5.4)",
+      "area": 3
+    },
+    {
+      "name": "Standard Comps (5.5)",
+      "compact": "Standard (5.5)",
+      "filtered_name": "5.5",
+      "area": 1,
+      "default": true
+    },
+    {
+      "name": "Non-Standard Comps (5.5)",
+      "compact": "Non-Standard (5.5",
+      "area": 1
+    },
+    {
+      "name": "Standard Comps (5.5)",
+      "compact": "Standard (5.5)",
+      "filtered_name": "5.5",
+      "area": 2
+    },
+    {
+      "name": "Non-Standard Comps (5.5)",
+      "compact": "Non-Standard (5.5)",
+      "area": 2
+    },
+    {
+      "name": "Standard Comps (5.5)",
+      "compact": "Standard (5.5)",
+      "filtered_name": "5.5",
+      "area": 3
+    },
+    {
+      "name": "Non-Standard Comps (5.5)",
+      "compact": "Non-Standard (5.5)",
+      "area": 3
+    },
+    {
+      "name": "Standard Comps (Echo)",
+      "compact": "Standard (Echo)",
+      "filtered_name": "Echo",
+      "area": 1
+    },
+    {
+      "name": "Non-Standard Comps (Echo)",
+      "compact": "Non-Standard (Echo)",
+      "area": 1
+    },
+    {
+      "name": "Standard Comps (Echo)",
+      "compact": "Standard (Echo)",
+      "filtered_name": "Echo",
+      "area": 2
+    },
+    {
+      "name": "Non-Standard Comps (Echo)",
+      "compact": "Non-Standard (Echo)",
+      "area": 2
+    },
+    {
+      "name": "Standard Comps (Echo)",
+      "compact": "Standard (Echo)",
+      "filtered_name": "Echo",
+      "area": 3
+    },
+    {
+      "name": "Non-Standard Comps (Echo)",
+      "compact": "Non-Standard (Echo)",
+      "area": 3
+    }
+  ]
+}
 
 function server_to_server(server_name){// lowercased serve name into uppercased server name
     return server_name.slice(0,1).toUpperCase()+server_name.slice(1);
@@ -259,11 +400,11 @@ class FluentFFlogs{
       return result_array;
     }
   
-    print_highest_percentile(encounterName, difficulty){
+    print_highest_percentile(encounter, difficulty){
       let root = this;
       return new Promise(async function(resolve, rejects){
-        let result_array = root.fromEncounter(encounterName);
-        if(result_array.length = 0){rejects(`No fight record fit in this fight: ${encounterName}`);}
+        let result_array = root.fromEncounter(encounter.encounterName);
+        if(result_array.length = 0){rejects(`No fight record fit in this fight: ${encounter.encounterName}`);}
   
         result_array = result_array.difficulty(difficulty);
         if(difficulty === 100) {difficulty = "normal";}
@@ -274,12 +415,12 @@ class FluentFFlogs{
         result_array = result_array.highest_percentile();
         if(Object.getOwnPropertyNames(result_array).length === 0){rejects("No fight record fit in this condition.");}
         if(Object.getOwnPropertyNames(result_array).length > 19){rejects("Error happened in highest_percentile, more porperties appeared.");}
-        if(result_array.percentile === -1){rejects(`Character: ${result_array.characterName}, has no record fit in this fight: ${encounterName}, in this difficulty: ${difficulty}`);}
+        if(result_array.percentile === -1){rejects(`Character: ${result_array.characterName}, has no record fit in this fight: ${encounter.encounterName}, in this difficulty: ${difficulty}`);}
         
         return resolve({
                   characterName: result_array.characterName, 
                   spec:result_array.spec, 
-                  fight: encounterName, 
+                  fight: encounter.encounterName, 
                   difficulty: difficulty, 
                   percentile: Math.round(result_array.percentile).toString(), 
                   total_dps: result_array.total.toString()
@@ -393,8 +534,10 @@ exports.user_message_delete = user_message_delete;
 exports.help = help;
 exports.isEligible = isEligible;
 
+exports.webhooks = webhooks;
 exports.server_list = server_list;
 exports.dc_server = dc_server;
 exports.region_dc_servers = region_dc_servers;
 exports.data_centers = data_centers;
 exports.server_regions = server_regions;
+exports.zone_38 = zone_38;

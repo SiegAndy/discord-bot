@@ -8,6 +8,8 @@ function add_private_key(URL) {return URL + loadstone_private_key;};
 module.exports = {
     find_character: async function (message, flag=false, lodestone=-1, character_name='', server=''){
         // Language data now is ignored, since XIVAPI set all of them to NULL when accessing player data.
+        // with flag means input is inner function call from current/other file, without flag means input is ~find command.
+        // if no lodestone id, then go for character name and server
         async function process(message, responses, character_name, server_name){
             let data = responses.data;
             //console.log(responses)

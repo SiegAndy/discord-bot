@@ -2,6 +2,7 @@
 const files = require('./filesystem.js');
 const {help} = require('./Classes.js');
 const {local_relay} = require('./relay.js');
+const {act_auto} = require('./act_auto_fflogs.js')
 
 module.exports = {
 
@@ -16,27 +17,27 @@ module.exports = {
     // remove: function(message, client_msgs, index){files.remove_message(message, client_msgs, index);},
 
 
-    help_cmd: function(message){help(message);},
+    help_cmd: (message) => help(message),
     
-    random: function(message){message.channel.send(Math.round(Math.random()*1000));},
+    random: (message) => message.channel.send(Math.round(Math.random()*1000)),
     
-    randomNumber: function(message,number){message.channel.send(Math.round(Math.random()*number));},
+    randomNumber: (message,number) => message.channel.send(Math.round(Math.random()*number)),
 
-    create_user: function (message){files.create_user(message);},
+    create_user:  (message) => files.create_user(message),
 
-    link_ff14: function (message){files.link_ff14(message);},
+    link_ff14:  (message) => files.link_ff14(message),
 
-    card: function(message){files.card(message);},
+    card: (message) => files.card(message),
     
-    check_rank: function(message){files.check_rank(message);},
+    check_rank: (message) => files.check_rank(message),
 
-    find_character: function(message){files.find_character(message);},
+    find_character: (message) => files.find_character(message),
 
-    auto_check_party_member: function(message){files.auto_check_party_member(message);},
+    act_auto: (message) => act_auto(message),
+
+    auto_check_party_member: (message) => files.auto_check_party_member(message),
 
     local_relay: ()=> console.log("under construction"),//function(message){local_relay(message);},
 
-    test: function(message){
-        console.log(message.author);
-    }
+    test: (message) => console.log(message.author)
 }
