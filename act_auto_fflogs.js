@@ -1,4 +1,4 @@
-const{webhooks, server_list, zone_38, server_to_server_region, timeout_send, FluentFFlogs} = require('./Classes.js')
+const{webhooks, server_list, zone_38, server_to_server_region, timeout_send, FluentFFlogs, zone_30, zone_32} = require('./Classes.js')
 const axios = require('axios');
 
 // to use this function, need to open act.
@@ -6,71 +6,12 @@ const axios = require('axios');
 //https://www.fflogs.com/v1/parses/character/adfwsdg%20piper/adamantoise/NA?bracket=0&compare=0&timeframe=historical&api_key=60cf5fc24a60225a8d6e343ba3f31a21
 //https://www.fflogs.com/v1/parses/character/T%27aldarim%20Annie/Sargatanas/NA?bracket=0&compare=0&timeframe=historical&api_key=60cf5fc24a60225a8d6e343ba3f31a21
 
-function get_icon_url(job){
-    let url = 'https://static.wikia.nocookie.net/ffxiv_gamepedia/images';
-    switch(job){
-        case 'Astrologian':
-            url += '/3/32/Astrologian.png';
-            return url;
-        case 'Bard':
-            url += '/8/82/Bard.png';
-            return url;
-        case 'Black Mage':
-            url += '/4/4e/Black_Mage.png';
-            return url;
-        case 'Blue Mage':
-            url += '/d/d5/Blue_Mage.png';
-            return url;
-        case 'Dancer':
-            url += '/4/41/Dancer.png';
-            return url;
-        case 'Dark Knight':
-            url += '/6/69/Dark_Knight.png';
-            return url;
-        case 'Dragoon':
-            url += '/c/c7/Dragoon.png';
-            return url;
-        case 'Gunbreaker':
-            url += '/3/31/Gunbreaker.png';
-            return url;
-        case 'Machinist':
-            url += '/e/e0/Machinist.png';
-            return url;
-        case 'Monk':
-            url += '/4/44/Monk.png';
-            return url;
-        case 'Ninja':
-            url += '/2/21/Ninja.png';
-            return url;
-        case 'Paladin':
-            url += '/b/b2/Paladin.png';
-            return url;
-        case 'Scholar':
-            url += '/c/c5/Scholar.png';
-            return url;
-        case 'Summoner':
-            url += '/2/2f/Summoner.png';
-            return url;        
-        case 'Warrior':
-            url += '/9/97/Warrior.png';
-            return url;
-        case 'White Mage':
-            url += '/e/e7/White_Mage.png';
-            return url;
-        case 'Red Mage':
-            url += '/3/36/Red_Mage.png';
-            return url;
-        case 'Samurai':
-            url += '/0/09/Samurai.png';
-            return url;
-        default:
-            return 'https://cdn.discordapp.com/attachments/794068116439171083/861067688188969010/800px-Question_opening-closing.png'
-    }
-}
-
-async function fetch_logs(message, name, server, encounterID=-1, partition=false, metric='dps', timeframe='historical', mode='parses'){
+async function fetch_logs(message, name, server, zone=-1, encounterID=-1, partition=false, metric='dps', timeframe='historical', mode='parses'){
     // partition= None || 1; metric= dps || hps || bossdps || tankhps || playerspeed; timeframe= historical || today; mode= parses || rankings;
     let URL = `https://www.fflogs.com/v1/${mode}/character/${name}/${server}/${server_to_server_region(server)}?`;
+    if(zone != -1){
+        URL += `zone=${zone}&`
+    }
     if(encounterID !== -1){
         URL += `encounter=${encounterID}&`
     }
@@ -107,11 +48,12 @@ async function act_auto(message){
     // ff14_embed.setAuthor(`${character_name} ${player_server}`, character_info.Avatar);
     let encounters = zone_38.encounters;
 
-    output_msgs += `${content[0]} ${content[1]} ${player_server}\n     Encounter       Highest Rank        Job\n`;
+    output_msgs += `${content[0]} ${content[1]} ${player_server}\n\n     Encounter       Highest Rank        Job\n`;
     
+    let responses = null;
     for (encounter in encounters){
         // console.log(encounters[encounter].id)
-        let responses = await fetch_logs(message, character_name, player_server
+        responses = await fetch_logs(message, character_name, player_server, zone_38.id
         , encounters[encounter].id, partition=1, metric='dps', timeframe='historical', mode='parses');
         responses = new FluentFFlogs(responses.data).difficulty(101).highest_percentile()
         if(responses.difficulty === 101){
@@ -122,8 +64,31 @@ async function act_auto(message){
             output_msgs += `${encounters[encounter].name}       No savage combat data found\n`;
             // ff14_embed.addField({ name: encounters[encounter].name, value: 'No savage combat data', inline: false })            
         }
-
     }
+    output_msgs += `\n\n         Ultimates               Cleared    Rank    Logs\n`
+
+    let ultimates_4 = zone_30.encounters;
+    for (ult in ultimates_4){
+        responses = await fetch_logs(message, character_name, player_server, zone_30.id
+            , ultimates_4[ult].id, partition=false, metric='dps', timeframe='historical', mode='parses');
+        let nums = responses.data.length
+        responses = new FluentFFlogs(responses.data).highest_percentile()
+        if(nums !== 0){
+            output_msgs += `${ultimates_4[ult].name}       Yes       ${Math.floor(responses.percentile)}      ${nums}\n`; 
+        }else{
+            output_msgs += `${ultimates_4[ult].name}        No        0      0\n`;       
+        }
+    }
+    responses = await fetch_logs(message, character_name, player_server, zone_32.id
+        , zone_32.encounters[0].id, partition=false, metric='dps', timeframe='historical', mode='parses');
+    let nums = responses.data.length
+    responses = new FluentFFlogs(responses.data).highest_percentile()
+    if(nums !== 0){
+        output_msgs += `${zone_32.encounters[0].name}       Yes       ${Math.floor(responses.percentile)}      ${nums}\n`; 
+    }else{
+        output_msgs += `${zone_32.encounters[0].name}       No         0       0\n`;       
+    }
+
     output_msgs += "```";
     //timeout_send(message,output_msgs);
     for (hook in webhooks){

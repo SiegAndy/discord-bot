@@ -1,45 +1,8 @@
-// const fs = require('fs');
-// const fs_promises = require('fs').promises;
-// const party_member = require('./Data/party_member.json');
-
-
-const auto_fflogs = require('./auto_fflogs.js');
-const {FluentFFlogs} = require('./Classes.js');
+require('dotenv').config({path: "C:/Users/zc470/Desktop/Extra/Discord-bot/.env"});
+const {FluentFFlogs, server_list, timeout_send, server_to_server_region, zone_38, webhooks} = require('./Classes.js');
 const axios = require('axios');
+const { find_character } = require('./loadstone.js');
 
-function slice_empty(input_message, variables){
-    let inner = input_message;
-    if(inner.indexOf(' ') === -1){
-        variables.push(input_message);
-        return variables;
-      }
-    let new_variable = inner.slice(0,inner.indexOf(' '));
-    variables.push(new_variable)
-    return slice_empty(inner.slice(inner.indexOf(' ')+1), variables);
-}
-
-function find_combat_zone(combatName){
-    switch(combatName){
-        case 'e5':return ["Ramuh",100,69,33];
-        case 'e5s':return ["Ramuh",101,69,33];
-        case 'e6':return ["Ifrit and Garuda",100,70,33];
-        case 'e6s':return ["Ifrit and Garuda",101,70,33];
-        case 'e7':return ["The Idol of Darkness",100,71,33];
-        case 'e7s':return ["The Idol of Darkness",101,71,33];
-        case 'e8':return ["Shiva",100,72,33];
-        case 'e8s':return ["Shiva",101,72,33];
-        case 'e9':return ["Cloud of Darkness",100,73,38];
-        case 'e9s':return ["Cloud of Darkness",101,73,38];
-        case 'e10':return ["Shadowkeeper",100,74,38];
-        case 'e10s':return ["Shadowkeeper",101,74,38];
-        case 'e11':return ["Fatebreaker",100,75,38];
-        case 'e11s':return ["Fatebreaker",101,75,38];
-        case 'e12':return ["Eden's Promise",100,76,38];
-        case 'e12sp1':return ["Eden's Promise",101,76,38];
-        case 'e12sp2':return ["Oracle of Darkness",101,77,38];
-        default: return ["error",-1,-1,-1];				
-    }
-}
 function incorrect_format(message){
     message.channel.send("Incorrect format").then(d_msg => {d_msg.delete({ timeout: 60000 });});
     message.channel.send("Use command '~fflogs [character_firstName] [character_lastName] [combatName] [server_name] ' to get highest rank fflogs.").then(d_msg => {d_msg.delete({ timeout: 60000 });});
@@ -74,149 +37,152 @@ async function inner_process(message, responses, server, combat_zone){
 }
 
 
-async function get_content_has_server(message, combat_zone, server, URL){
-  return new Promise(async function(resolve, rejects){
-    try{
-        const responses = await axios.get(URL);
-        const result = await inner_process(message, responses, server, combat_zone);
-        resolve(result);
-    }
-    catch(error){
-      console.log("Error happened in get_content_has_server() async function.")       
-    }
-  });
-}
 
-async function get_content(message, combat_zone, server, URL){
-  return new Promise(async function(resolve, rejects){
-    try{
-        //URL = "https://www.fflogs.com/v1/parses/character/T'aldarim%20Annie/Sargatanas/NA?metric=dps&bracket=0&compare=0&timeframe=historical&api_key=60cf5fc24a60225a8d6e343ba3f31a21"
-        const responses = await axios.get(URL);       
-        message.channel.send("**").then(d_msg => {d_msg.delete({ timeout: 120000 });});
-        message.channel.send("Find Character in Server: " + server).then(d_msg => {d_msg.delete({ timeout: 120000 });});
-        const result = await inner_process(message, responses, server, combat_zone);
-        resolve(result);
-        //message.channel.send("**").then(d_msg => {d_msg.delete({ timeout: 60000 });});
-    }
-    catch(error){
-        //message.channel.send("**").then(d_msg => {d_msg.delete({ timeout: 60000 });});
-        //message.channel.send("Can't find Character in Server: " + server).then(d_msg => {d_msg.delete({ timeout: 60000 });});
-        //message.channel.send("**").then(d_msg => {d_msg.delete({ timeout: 60000 });});
-        console.log(error);
-        console.log("unknown error happened in get_content() async function.");
-    }
-    //return new Failure("unknown error happened in get_content() async function.");
-  });
-}
 
-async function iterate_combat_zone(message, combats, server, URL){ //iterate each possible combat zone
-    let combat_zone = [];
-    for(let i = 0; i < combats.length; ++i){
-        combat_zone = find_combat_zone(combats[i]);
-        return await get_content(message, combat_zone, server, URL);
-    }
-}
-async function combat_server(message, has_server, has_fight, server, combatName, URL){ // check if input have fight and server
-    let combats = ["e9", "e9s","e10","e10s","e11","e11s","e12","e12sp1","e12sp2"];	
-    if(has_server){
-        if(has_fight){
-            return await get_content_has_server(message, find_combat_zone(combatName.toLowerCase()), server, URL);
-            
-        }
-        else{
-            return iterate_combat_zone(message, combats, server, URL);
-        }
-    }
-    else{
-        if(has_fight){            
-            return await get_content(message, find_combat_zone(combatName.toLowerCase()), server, URL); 
-        }
-        else{
-            return iterate_combat_zone(message, combats, server, URL);
-        }
-    }
-    
+
+
+
+//return combat_zone_name, combat_difficulty(normal/savage), encounter_id, encounter_zone
+function find_combat_zone(combatName){
+  switch(combatName){
+      case 'e5':return ["Ramuh",100,69,33];
+      case 'e5s':return ["Ramuh",101,69,33];
+      case 'e6':return ["Ifrit and Garuda",100,70,33];
+      case 'e6s':return ["Ifrit and Garuda",101,70,33];
+      case 'e7':return ["The Idol of Darkness",100,71,33];
+      case 'e7s':return ["The Idol of Darkness",101,71,33];
+      case 'e8':return ["Shiva",100,72,33];
+      case 'e8s':return ["Shiva",101,72,33];
+      case 'e9':return ["Cloud of Darkness",100,73,38];
+      case 'e9s':return ["Cloud of Darkness",101,73,38];
+      case 'e10':return ["Shadowkeeper",100,74,38];
+      case 'e10s':return ["Shadowkeeper",101,74,38];
+      case 'e11':return ["Fatebreaker",100,75,38];
+      case 'e11s':return ["Fatebreaker",101,75,38];
+      case 'e12':return ["Eden's Promise",100,76,38];
+      case 'e12sp1':return ["Eden's Promise",101,76,38];
+      case 'e12sp2':return ["Oracle of Darkness",101,77,38];
+      default: return ["error",-1,-1,-1];				
+  }
 }
 
 
+async function fetch_logs(message, name, server, zone=-1, encounterID=-1, partition=false, metric='dps', timeframe='historical', mode='parses'){
+  // partition= None || 1; metric= dps || hps || bossdps || tankhps || playerspeed; timeframe= historical || today; mode= parses || rankings;
+  let URL = `https://www.fflogs.com/v1/${mode}/character/${name}/${server}/${server_to_server_region(server)}?`;
+  if(zone != -1){
+      URL += `zone=${zone}&`
+  }
+  if(encounterID !== -1){
+      URL += `encounter=${encounterID}&`
+  }
+  URL += `metric=${metric}&`;
+  if(partition){
+      URL += `partition=${partition}`;
+  }
+  URL += `&timeframe=${timeframe}&api_key=${process.env.FFLOGS_API_KEY}`;
+  try {
+      //console.log(URL);
+      return await axios.get(URL);    
+  } catch (error) {
+      timeout_send(message, 'Error happened when fetching data from fflogs, please check inputs!')
+      console.log(error);
+  }
+}
+
+
+/* return type: [{Server_Region}'NA', {Server Name}'Sargatanas', {Character Name}"T'aldarim Annie"]
+return value is for database record usage, the logs data would be directly displayed using Markdown ML
+*/
 async function check_rank (message){
-  let default_URL = "https://www.fflogs.com/v1/parses/character";
   
-  //new attributes
-  let original = message.content.slice(8); // get attributes String
-  let variables = [];
-  variables = slice_empty(original, variables);
+  // message = {'content': "~fflogs T'aldarim Annie E9S"}
+
+  let content = message.content.split(' ').slice(1);
   let character_firstName = "";
   let character_lastName = "";
   let combatName = "";
   let server_name = "";
-  let format = true;
+  let character_info = undefined;
   let has_fight = false;
-  let has_server = false;
 
-  switch(variables.length){
-      case 2:
-          message.channel.send("Currently, this service is testing. Errors are expected.").then(d_msg => {d_msg.delete({ timeout: 60000 });});
-          character_firstName = variables[0];
-          character_lastName = variables[1];
+  switch(content.length){
+      case 2: // ~fflogs T'aldarim Annie
+          //message.channel.send("Currently, this service is testing. Errors are expected.").then(d_msg => {d_msg.delete({ timeout: 60000 });});
+          character_firstName = content[0];
+          character_lastName = content[1];
+          character_info = await find_character(message, true, lodestone=-1, content[0] + '%20' + content[1]);
           break;
-      case 3:
-          character_firstName = variables[0];
-          character_lastName = variables[1];
-          combatName = variables[2];
+      case 3:// ~fflogs T'aldarim Annie E9s
+          character_firstName = content[0];
+          character_lastName = content[1];
+          combatName = content[2].toLowerCase();
+          character_info = await find_character(message, true, lodestone=-1, content[0] + '%20' + content[1]);
           has_fight = true;
           break;
-      case 4:
-          character_firstName = variables[0];
-          character_lastName = variables[1];
-          combatName = variables[2];
-          server_name = variables[3];
+      case 4:// ~fflogs T'aldarim Annie E9s Sargatanas
+          character_firstName = content[0];
+          character_lastName = content[1];
+          combatName = content[2].toLowerCase();
+          server_name = content[3];
+          character_info = await find_character(message, true, lodestone=-1, content[0] + '%20' + content[1], content[3]);
           has_fight = true;
-          has_server = true;
           break;
       default:
           incorrect_format(message);
-          format = false;
           break;
   }
 
-  //preset attributes
-  let api_key = `&api_key=${process.env.FFLOGS_API_KEY}`;
-  let serverRegion = "/NA?";
-  let metric = "metric=dps";
-  let bracket = "&bracket=0";
-  let compare = "&compare=0";
-  let timeframe = "&timeframe=historical"; // historical/today
+  let result = [undefined, undefined, undefined];
+  if(character_info === undefined){return result;}
+  console.log(character_info.Server)
+  result = [server_to_server_region(character_info.Server), character_info.Server, character_info.Name]
+  
+  let output_msgs = "```ml\n";
+  output_msgs += `${content[0]} ${content[1]} ${character_info.Server}\n\n     Encounter       Highest Rank        Job\n`;
 
-  //let default_URL = "https://www.fflogs.com/v1/parses/character/{characterName}/{serverName}/{serverRegion}"
-          
-  //combatName = "E5s";
-
-  //URL = "https://www.fflogs.com/v1/parses/character/T%27aldarim%20Annie/Jenova/NA?metric=dps&bracket=0&compare=0&timeframe=historical&api_key=60cf5fc24a60225a8d6e343ba3f31a21";
-
-  let data = [undefined, undefined, undefined];
-  if(has_server){		
-      let URL = default_URL + "/" + character_firstName + "%20" + character_lastName + "/" + server_name + serverRegion + metric + bracket + compare + timeframe + api_key;
-      //console.log(URL)
-      let info = await combat_server(message, has_server, has_fight, server_name, combatName, URL);
-      //if(info === undefined){message.channel.send("Unknown error when retrieving Character information.").then(d_msg => {d_msg.delete({ timeout: 60000 });}); return data;}
-      if(info[0] !== undefined){data = info;}
+  let logs = null;
+  if(has_fight){
+    let encounter = find_combat_zone(combatName);
+    if(encounter[1] === -1){
+      timeout_send(message, "Supported Fights only includes from Normal Raid Eden 5 to Eden 12 with Normal or Savage difficulty!")
+      return result;
+    }
+    logs = await fetch_logs(message, character_info.Name, character_info.Server, encounter[3], encounter[2], partition=false, metric='dps', timeframe='historical', mode='parses')
+    logs = new FluentFFlogs(logs.data).difficulty(101).highest_percentile();
+    if(logs.difficulty === 101){
+      output_msgs += `${encounter[0]}        ${Math.floor(logs.percentile)}             ${logs.spec}\n`;
+    }else{
+      output_msgs += `${encounter[0]}       No savage combat data found\n`;        
+    }
+  
   }
-  else{
-      let servers = ["Adamantoise", "Cactuar", "Faerie", "Gilgamesh", "Jenova", "Midgardsormr", "Sargatanas", "Siren"];
-      for(server of servers){
-          let URL = default_URL + "/" + character_firstName + "%20" + character_lastName + "/" + server + serverRegion + metric + bracket + compare + timeframe + api_key;                             
-          // console.log(server);
-          let info = await combat_server(message, has_server, has_fight, server, combatName, URL);
-          message.channel.send(`Searching Server: ${server}`).then(d_msg => {d_msg.delete({ timeout: 60000 });});
-          if(info === undefined){message.channel.send("Unknown error when retrieving Character information.").then(d_msg => {d_msg.delete({ timeout: 60000 });}); return data;}
-          if(info[0] !== undefined){data = info;}
-      }
+  else{// default print out latest 4 savage fights with no specific partition 
+    let encounters = zone_38.encounters;
+    let responses = null;
+    for (encounter in encounters){
+        // console.log(encounters[encounter].id)
+        responses = await fetch_logs(message, character_info.Name, character_info.Server, zone_38.id
+        , encounters[encounter].id, partition=1, metric='dps', timeframe='historical', mode='parses');
+        responses = new FluentFFlogs(responses.data).difficulty(101).highest_percentile()
+        if(responses.difficulty === 101){
+            output_msgs += `${encounters[encounter].name}        ${Math.floor(responses.percentile)}             ${responses.spec}\n`;
+        }else{
+            output_msgs += `${encounters[encounter].name}       No savage combat data found\n`;        
+        }
+    }
+  } 
 
-  }
-  return data;
+  output_msgs += "```";
+  for (hook in webhooks){
+    console.log(webhooks[hook])
+    axios.post(webhooks[hook],{content : output_msgs});
+  } 
 
+  return result;  
 }
+
+
 
 /* Beginning of auto rank checking process*/
 
@@ -289,20 +255,20 @@ async function get_members(message){// no return; player_info in file
 
 
 
-
-
 module.exports = {
 
   check_rank_onlyCombatName: async function (message, serverRegion,server_name,character_name,combatName){
+    //code to be written; supposed to check discord user's ff14 info if linked 
     inner_check_rank(message, serverRegion,server_name,character_name,combatName);
   },
 
-  check_rank: check_rank ,
-  
-  auto_check_party_member: function (message){
-    get_members(message);
-  },
-    
+  check_rank: check_rank,    
 }
-// message = {content : "~fflogs T'aldarim Annie E9s Sargatanas"};
-// module.exports.check_rank(message);
+
+
+// async function test(){
+//   let message = {content : "~fflogs Joe Joe"};
+//   let result = await check_rank(message);  
+//   console.log(result)
+// }
+// test()

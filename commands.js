@@ -35,8 +35,6 @@ module.exports = {
 
     act_auto: (message) => act_auto(message),
 
-    auto_check_party_member: (message) => files.auto_check_party_member(message),
-
     local_relay: ()=> console.log("under construction"),//function(message){local_relay(message);},
 
     test: (message) => console.log(message.author)

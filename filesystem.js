@@ -14,7 +14,7 @@ async function embeded_ff14(message, flag=false, character_name="", server=""){
         character_info = await loadstone.find_character(message,flag,-1,character_name,server);
     } catch (error) {
         timeout_send(message, error);
-        console.log(message, error);
+        console.log(error);
     }   
 
     if(character_info === null){return;}
@@ -151,7 +151,7 @@ async function card(message){
         if(cur_user.rows[0].ff14_loadstone !== undefined) 
             ff14_character = cur_user.rows[0].fname + " " + cur_user.rows[0].lname;
     } catch (error) {
-        console.log(message, error);
+        console.log(error);
         timeout_send(message, error);
     }
     pool.destroy();
@@ -207,7 +207,7 @@ async function check_rank(message){
         else{
             if(cur_user.rows[0].ff14_loadstone === undefined) linked = false;
             else{ //cur_user.rows[0].ff14_loadstone !== undefined => we have character name, server, data center from database
-                if(ontent.length === 2){//['',combatname] from content
+                if(content.length === 2){//['',combatname] from content
                     result = await fflogs.check_rank_onlyCombatName(message
                         , cur_user.rows[0].region, cur_user.rows[0].server
                         , cur_user.rows[0].fname+" "+cur_user.rows[0].lname
@@ -227,7 +227,7 @@ async function check_rank(message){
             timeout_send(message, `Character: ${result[2]} linked with User: ${message.author.username} with ID: ${message.author.id}`);
         }
     } catch (error) {
-        console.log(message, error);
+        console.log(error);
         timeout_send(message, error);
     } 
     finally{pool.destroy();}    
@@ -242,9 +242,5 @@ module.exports = {
 
     check_rank: check_rank ,
 
-    //for user-use to display character information
-    find_character: find_character, 
-
-    auto_check_party_member: function (message){fflogs.auto_check_party_member(message);},
-    
+    find_character: find_character,     
 }

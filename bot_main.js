@@ -67,7 +67,7 @@ client.on('message', message => {
 					timeout_send(message, "You are not supposed to use this command!")
 					WC.loadstone_character_pic(2138764);
 					break;
-				case "auto":
+				case "auto":// supposed to check discord user's ff14 info if linked 
 					cmds.act_auto(message);
 					// cmds.auto_check_party_member(message);
 					break;

@@ -12,6 +12,11 @@ const server_regions = ["NA","EU","JP"];
 
 const data_centers = ["Aether","Chaos","Crystal","Elemental","Gaia","Light","Mana","Primal"]
 
+const region_dc = {NA:['Aether','Crystal','Primal'],
+                    EU:['Chaos','Light'],
+                    JP:['Elemental','Gaia','Mana']
+                  }
+
 const region_dc_servers = {NA:{Aether:["Adamantoise","Cactuar","Faerie","Gilgamesh","Jenova","Midgardsormr","Sargatanas","Siren"]
                                  ,Crystal:["Balmung","Brynhildr","Coeurl","Diabolos","Goblin","Malboro","Mateus","Zalera"]
                                  ,Primal:["Behemoth","Excalibur","Exodus","Famfrit","Hyperion","Lamia","Leviathan","Ultros"]}
@@ -47,7 +52,323 @@ const server_list = ["Adamantoise","Aegis","Alexander","Anima","Asura","Atomos"
                     ,"Ultros","Unicorn","Valefor","Yojimbo","Zalera"
                     ,"Zeromus","Zodiark","Spriggan","Twintania"]
 
+//4.0 Ultimates
+const zone_30 = {
+  "id": 30,
+  "name": "Ultimates (Stormblood)",
+  "frozen": false,
+  "encounters": [
+    {
+      "id": 1047,
+      "name": "The Unending Coil of Bahamut"
+    },
+    {
+      "id": 1048,
+      "name": `    The Weapon's Refrain    `
+    }
+  ],
+  "brackets": {
+    "min": 5,
+    "max": 5.5,
+    "bucket": 0.1,
+    "type": "Patch"
+  },
+  "partitions": [
+    {
+      "name": "Standard Comps",
+      "compact": "Standard",
+      "area": 1,
+      "default": true
+    },
+    {
+      "name": "Non-Standard Comps",
+      "compact": "Non-Standard",
+      "area": 1
+    },
+    {
+      "name": "Standard Comps",
+      "compact": "Standard",
+      "default": true,
+      "area": 2
+    },
+    {
+      "name": "Non-Standard Comps",
+      "compact": "Non-Standard",
+      "area": 2
+    },
+    {
+      "name": "Standard Comps",
+      "compact": "Standard",
+      "default": true,
+      "area": 3
+    },
+    {
+      "name": "Non-Standard Comps",
+      "compact": "Non-Standard",
+      "area": 3
+    }
+  ]
+}
 
+//5.0 Ultimates
+const zone_32 = {
+  "id": 32,
+  "name": "Ultimates",
+  "frozen": false,
+  "encounters": [
+    {
+      "id": 1050,
+      "name": `    The Epic of Alexander   `
+    }
+  ],
+  "brackets": {
+    "min": 5,
+    "max": 5.5,
+    "bucket": 0.1,
+    "type": "Patch"
+  },
+  "partitions": [
+    {
+      "name": "Standard Comps",
+      "compact": "Standard",
+      "area": 1,
+      "filtered_name": "5.1-5.2"
+    },
+    {
+      "name": "Non-Standard Comps",
+      "compact": "Non-Standard",
+      "area": 1
+    },
+    {
+      "name": "Standard Comps",
+      "compact": "Standard",
+      "area": 2,
+      "filtered_name": "5.1-5.2"
+    },
+    {
+      "name": "Non-Standard Comps",
+      "compact": "Non-Standard",
+      "area": 2
+    },
+    {
+      "name": "Standard Comps",
+      "compact": "Standard",
+      "area": 3,
+      "filtered_name": "5.1-5.2"
+    },
+    {
+      "name": "Non-Standard Comps",
+      "compact": "Non-Standard",
+      "area": 3
+    },
+    {
+      "name": "Standard Comps (5.3)",
+      "compact": "Standard (5.3)",
+      "filtered_name": "5.3",
+      "area": 1
+    },
+    {
+      "name": "Non-Standard Comps (5.3)",
+      "compact": "Non-Standard (5.3)",
+      "area": 1
+    },
+    {
+      "name": "Standard Comps (5.3)",
+      "compact": "Standard (5.3)",
+      "filtered_name": "5.3",
+      "area": 2
+    },
+    {
+      "name": "Non-Standard Comps (5.3)",
+      "compact": "Non-Standard (5.3)",
+      "area": 2
+    },
+    {
+      "name": "Standard Comps (5.3)",
+      "compact": "Standard (5.3)",
+      "filtered_name": "5.3",
+      "area": 3
+    },
+    {
+      "name": "Non-Standard Comps (5.3)",
+      "compact": "Non-Standard (5.3)",
+      "area": 3
+    },
+    {
+      "name": "Standard Comps (5.4)",
+      "compact": "Standard (5.4)",
+      "filtered_name": "5.4",
+      "area": 1
+    },
+    {
+      "name": "Non-Standard Comps (5.4)",
+      "compact": "Non-Standard (5.4)",
+      "area": 1
+    },
+    {
+      "name": "Standard Comps (5.4)",
+      "compact": "Standard (5.4)",
+      "filtered_name": "5.4",
+      "area": 2,
+      "default": true
+    },
+    {
+      "name": "Non-Standard Comps (5.4)",
+      "compact": "Non-Standard (5.4)",
+      "area": 2
+    },
+    {
+      "name": "Standard Comps (5.4)",
+      "compact": "Standard (5.4)",
+      "filtered_name": "5.4",
+      "area": 3,
+      "default": true
+    },
+    {
+      "name": "Non-Standard Comps (5.4)",
+      "compact": "Non-Standard (5.4)",
+      "area": 3
+    },
+    {
+      "name": "Standard Comps (5.5)",
+      "compact": "Standard (5.5)",
+      "filtered_name": "5.5",
+      "area": 1,
+      "default": true
+    },
+    {
+      "name": "Non-Standard Comps (5.5)",
+      "compact": "Non-Standard (5.5)",
+      "area": 1
+    },
+    {
+      "name": "Standard Comps (5.5)",
+      "compact": "Standard (5.5)",
+      "filtered_name": "5.5",
+      "area": 2
+    },
+    {
+      "name": "Non-Standard Comps (5.5)",
+      "compact": "Non-Standard (5.5)",
+      "area": 2
+    },
+    {
+      "name": "Standard Comps (5.5)",
+      "compact": "Standard (5.5)",
+      "filtered_name": "5.5",
+      "area": 3
+    },
+    {
+      "name": "Non-Standard Comps (5.5)",
+      "compact": "Non-Standard (5.5)",
+      "area": 3
+    }
+  ]
+}
+
+//E5-E8
+const zone_33 = {
+  "id": 33,
+  "name": "Eden's Verse",
+  "frozen": false,
+  "encounters": [
+    {
+      "id": 69,
+      "name": "Ramuh"
+    },
+    {
+      "id": 70,
+      "name": "Ifrit and Garuda"
+    },
+    {
+      "id": 71,
+      "name": "The Idol of Darkness"
+    },
+    {
+      "id": 72,
+      "name": "Shiva"
+    }
+  ],
+  "brackets": {
+    "min": 5,
+    "max": 5.5,
+    "bucket": 0.1,
+    "type": "Patch"
+  },
+  "partitions": [
+    {
+      "name": "Standard Comps",
+      "compact": "Standard",
+      "area": 1,
+      "default": true,
+      "filtered_name": "5.2"
+    },
+    {
+      "name": "Non-Standard Comps",
+      "compact": "Non-Standard",
+      "area": 1
+    },
+    {
+      "name": "Standard Comps",
+      "compact": "Standard",
+      "default": true,
+      "area": 2,
+      "filtered_name": "5.2"
+    },
+    {
+      "name": "Non-Standard Comps",
+      "compact": "Non-Standard",
+      "area": 2
+    },
+    {
+      "name": "Standard Comps",
+      "compact": "Standard",
+      "default": true,
+      "area": 3,
+      "filtered_name": "5.2"
+    },
+    {
+      "name": "Non-Standard Comps",
+      "compact": "Non-Standard",
+      "area": 3
+    },
+    {
+      "name": "Standard Comps (5.3)",
+      "compact": "Standard (5.3)",
+      "filtered_name": "5.3",
+      "area": 1
+    },
+    {
+      "name": "Non-Standard Comps (5.3)",
+      "compact": "Non-Standard (5.3)",
+      "area": 1
+    },
+    {
+      "name": "Standard Comps (5.3)",
+      "compact": "Standard (5.3)",
+      "filtered_name": "5.3",
+      "area": 2
+    },
+    {
+      "name": "Non-Standard Comps (5.3)",
+      "compact": "Non-Standard (5.3)",
+      "area": 2
+    },
+    {
+      "name": "Standard Comps (5.3)",
+      "compact": "Standard (5.3)",
+      "filtered_name": "5.3",
+      "area": 3
+    },
+    {
+      "name": "Non-Standard Comps (5.3)",
+      "compact": "Non-Standard (5.3)",
+      "area": 3
+    }
+  ]
+}
+
+//E9-E12
 const zone_38 = {
   "id": 38,
   "name": "Eden's Promise",
@@ -193,7 +514,10 @@ function server_to_server(server_name){// lowercased serve name into uppercased 
 function server_to_server_region(server_name){
 
     for (server_region in server_regions){
+      let cur_region = server_regions[server_region];
+      let data_centers = region_dc[cur_region]
         for(data_center in data_centers){ 
+            console.log([data_centers[data_center]])
             if(region_dc_servers[server_regions[server_region]][data_centers[data_center]].findIndex((server) => server.localeCompare(server_to_server(server_name)) === 0 ) !== -1){
                 return server_regions[server_region];
             }
@@ -304,6 +628,69 @@ function isEligible(message, priority){
     return true;
   }
 }
+
+function get_icon_url(job){
+  let url = 'https://static.wikia.nocookie.net/ffxiv_gamepedia/images';
+  switch(job){
+      case 'Astrologian':
+          url += '/3/32/Astrologian.png';
+          return url;
+      case 'Bard':
+          url += '/8/82/Bard.png';
+          return url;
+      case 'Black Mage':
+          url += '/4/4e/Black_Mage.png';
+          return url;
+      case 'Blue Mage':
+          url += '/d/d5/Blue_Mage.png';
+          return url;
+      case 'Dancer':
+          url += '/4/41/Dancer.png';
+          return url;
+      case 'Dark Knight':
+          url += '/6/69/Dark_Knight.png';
+          return url;
+      case 'Dragoon':
+          url += '/c/c7/Dragoon.png';
+          return url;
+      case 'Gunbreaker':
+          url += '/3/31/Gunbreaker.png';
+          return url;
+      case 'Machinist':
+          url += '/e/e0/Machinist.png';
+          return url;
+      case 'Monk':
+          url += '/4/44/Monk.png';
+          return url;
+      case 'Ninja':
+          url += '/2/21/Ninja.png';
+          return url;
+      case 'Paladin':
+          url += '/b/b2/Paladin.png';
+          return url;
+      case 'Scholar':
+          url += '/c/c5/Scholar.png';
+          return url;
+      case 'Summoner':
+          url += '/2/2f/Summoner.png';
+          return url;        
+      case 'Warrior':
+          url += '/9/97/Warrior.png';
+          return url;
+      case 'White Mage':
+          url += '/e/e7/White_Mage.png';
+          return url;
+      case 'Red Mage':
+          url += '/3/36/Red_Mage.png';
+          return url;
+      case 'Samurai':
+          url += '/0/09/Samurai.png';
+          return url;
+      default:
+          return 'https://cdn.discordapp.com/attachments/794068116439171083/861067688188969010/800px-Question_opening-closing.png'
+  }
+}
+
 
 class FluentFFlogs{
     constructor(jsonData) {
@@ -416,7 +803,7 @@ class FluentFFlogs{
         if(Object.getOwnPropertyNames(result_array).length === 0){rejects("No fight record fit in this condition.");}
         if(Object.getOwnPropertyNames(result_array).length > 19){rejects("Error happened in highest_percentile, more porperties appeared.");}
         if(result_array.percentile === -1){rejects(`Character: ${result_array.characterName}, has no record fit in this fight: ${encounter.encounterName}, in this difficulty: ${difficulty}`);}
-        
+        console.log(result_array)
         return resolve({
                   characterName: result_array.characterName, 
                   spec:result_array.spec, 
@@ -532,12 +919,17 @@ exports.output_json = output_json;
 exports.timeout_send = timeout_send;
 exports.user_message_delete = user_message_delete;
 exports.help = help;
+exports.get_icon_url = get_icon_url;
 exports.isEligible = isEligible;
 
 exports.webhooks = webhooks;
 exports.server_list = server_list;
 exports.dc_server = dc_server;
+exports.region_dc = region_dc;
 exports.region_dc_servers = region_dc_servers;
 exports.data_centers = data_centers;
 exports.server_regions = server_regions;
+exports.zone_30 = zone_30;
+exports.zone_32 = zone_32;
+exports.zone_33 = zone_33;
 exports.zone_38 = zone_38;
