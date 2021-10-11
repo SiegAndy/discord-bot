@@ -155,7 +155,7 @@ async function card(message){
         timeout_send(message, error);
     }
     pool.destroy();
-    console.log(cur_user.rows[0])
+    // console.log(cur_user.rows[0])
     let embed_ff14 = undefined;
     let embed = new Discord.MessageEmbed()
                             .setColor('#63d6ff')
@@ -185,6 +185,10 @@ async function find_character(message){
     timeout_send(message, result);
 }
 
+/*current issue:
+1): ~fflogs Ict Tease E9s => throw 'Result pulled from fflogs is undefined!!' while there is data returned
+2): auto creating new user profile and auto linking current user with character might not be wanted.
+*/
 async function check_rank(message){
     let linked = true;
     let content = message.content.replace("~fflogs",'').split(' ').slice(1);
@@ -196,7 +200,7 @@ async function check_rank(message){
         linked = false;
         cur_user = await pool.user_info(message.author.id);
         if (cur_user.rowCount === 0){
-            await pool.insert(message.author.id, message.author.username);
+            await pool.insert(message.author.id, message.author.username); // auto creating new user profile
             timeout_send(message, "Thank you for using this bot!\nNew user added.");
             pool.destroy();
             pool = new Database();            
@@ -205,7 +209,7 @@ async function check_rank(message){
             if (cur_user === null){throw "Error, current user still have not been added to database!";}
         }   
         else{
-            if(cur_user.rows[0].ff14_loadstone === undefined) linked = false;
+            if(cur_user.rows[0].ff14_loadstone === undefined) linked = false; // no linked character
             else{ //cur_user.rows[0].ff14_loadstone !== undefined => we have character name, server, data center from database
                 if(content.length === 2){//['',combatname] from content
                     result = await fflogs.check_rank_onlyCombatName(message
@@ -233,6 +237,42 @@ async function check_rank(message){
     finally{pool.destroy();}    
 }
 
+async function check_rank_temp(message){
+    let linked = true;
+    let content = message.content.replace("~fflogs",'').split(' ').slice(1);
+    let result = undefined;
+
+    const pool = new Database();
+    let cur_user = null;
+    console.log(content)
+    try {
+        if(content.length == 0){ // ~fflogs => needs a pre-linked ff14 character
+            cur_user = await pool.user_info(message.author.id);
+            if (cur_user.rowCount === 0){
+                timeout_send('Current user is not in the database, please create a new user profile. (~create)')
+            }
+            else{
+                if(cur_user.rows[0].ff14_loadstone === undefined){
+                    timeout_send('Current user has no ff14 character linked in the database, please link a new ff14 character. (~link [lodestone id])\
+                    \n https://na.finalfantasyxiv.com/lodestone/character/YOUR_lodestone_ID/')
+                }
+                else{
+                    message.content = `~fflogs ${cur_user.rows[0].fname+" "+cur_user.rows[0].lname} ${cur_user.rows[0].server} ${cur_user.rows[0].region}`
+                    result = await fflogs.check_rank(message);
+                }
+            }
+        }
+        else{
+            result = await fflogs.check_rank(message);
+        }
+    } catch (error) {
+        console.log(error);
+        timeout_send(message, error);
+    }
+    finally{pool.destroy();}    
+}
+
+
 module.exports = {
     create_user: create_user,
 
@@ -240,7 +280,7 @@ module.exports = {
 
     card: card,
 
-    check_rank: check_rank ,
+    check_rank: check_rank_temp ,
 
     find_character: find_character,     
 }

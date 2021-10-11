@@ -97,7 +97,7 @@ async function find_character(message, flag=false, lodestone=-1, character_name=
              
         }            
     }
-    
+    console.log(contents)
     if(contents.length === 1){ // ff14 lodestone id
         console.log("Pass1")
         return await get(message, add_private_key(default_URL + contents[0]));

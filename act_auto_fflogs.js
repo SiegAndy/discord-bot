@@ -103,3 +103,6 @@ async function act_auto(message){
 //https://www.fflogs.com/v1/parses/character/T'aldarim%20Annie/Sargatanas/NA?encounter=77&metric=dps&partition=1&timeframe=historical&api_key=60cf5fc24a60225a8d6e343ba3f31a21
 
 exports.act_auto = act_auto;
+
+
+// need integration from act_auto_fflogs with fflogs_analysis

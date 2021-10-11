@@ -6,7 +6,7 @@ const WC = require('./web_crawler.js');
 
 const client = new Discord.Client();
 //client.msgs = require("./msgs.json"); using json for data storage, replacing by PostgreSQL
-const prefix = "~";
+const prefix = "!";
 
 client.on('ready', () => {
 	console.log('Ready!');

@@ -9,34 +9,6 @@ function incorrect_format(message){
     message.channel.send("		E.g. ~fflogs T'aldarim Annie E5s Sargatanas. combatName and server_name are omitable.").then(d_msg => {d_msg.delete({ timeout: 60000 });});
 }
 
-
-async function inner_process(message, responses, server, combat_zone){
-  return new Promise(async function(resolve, rejects){
-    if(combat_zone.length !== 2){message.channel.send("Error expression in find_combat_zone(), output error").then(d_msg => {d_msg.delete({ timeout: 60000 });});return;}
-    if(combat_zone[1] === -1){message.channel.send("Error expression in find_combat_zone(), can't find correspond fight.").then(d_msg => {d_msg.delete({ timeout: 60000 });});return;}
-    try {
-      let result = await new FluentFFlogs(responses.data).print_highest_percentile(combat_zone[0], combat_zone[1]);
-
-      //`Character: " + result_array.characterName + ", with Role: " + result_array.spec 
-      //+ ", in Fight: " + encounterName + ", with Mode: " + difficulty 
-      //+ ", has Highest Ranking: " + Math.round(result_array.percentile).toString() 
-      //+ ", with Total DPS: " + result_array.total.toString()`
-
-      message.channel.send(`Character: ${result.characterName}
-                            , with Role: ${result.spec}
-                            , in Fight: ${result.fight} 
-                            , with Mode: ${result.difficulty}
-                            , has Highest Ranking: ${result.percentile}
-                            , with Total DPS: ${result.total_dps}`)
-                      .then(d_msg => {d_msg.delete({ timeout: 120000 });});
-      resolve(["NA", server,result.characterName]);
-    } catch (error) {
-      message.channel.send(error).then(d_msg => {d_msg.delete({ timeout: 60000 });});
-    }
-  });
-}
-
-
 //return combat_zone_name, combat_difficulty(normal/savage), encounter_id, encounter_zone
 function find_combat_zone(combatName){
   switch(combatName){
@@ -108,20 +80,36 @@ async function check_rank (message){
           character_lastName = content[1];
           character_info = await find_character(message, true, lodestone=-1, content[0] + '%20' + content[1]);
           break;
-      case 3:// ~fflogs T'aldarim Annie E9s
+      case 3:// ~fflogs T'aldarim Annie E9s || ~fflogs T'aldarim Annie Sargatanas
           character_firstName = content[0];
           character_lastName = content[1];
-          combatName = content[2].toLowerCase();
-          character_info = await find_character(message, true, lodestone=-1, content[0] + '%20' + content[1]);
-          has_fight = true;
+          slot3 = content[2].toLowerCase();
+          if(slot3.length > 3){// ~fflogs T'aldarim Annie Sargatanas
+            server_name = content[2];
+            character_info = await find_character(message, true, lodestone=-1, content[0] + '%20' + content[1], content[2]);
+          }
+          else{// ~fflogs T'aldarim Annie E9s
+            combatName = slot3
+            server_name = content[2];
+            character_info = await find_character(message, true, lodestone=-1, content[0] + '%20' + content[1]);
+            has_fight = true;
+          }
           break;
-      case 4:// ~fflogs T'aldarim Annie E9s Sargatanas
+      case 4:// ~fflogs T'aldarim Annie E9s Sargatanas || ~fflogs T'aldarim Annie Sargatanas Aether
           character_firstName = content[0];
           character_lastName = content[1];
-          combatName = content[2].toLowerCase();
-          server_name = content[3];
-          character_info = await find_character(message, true, lodestone=-1, content[0] + '%20' + content[1], content[3]);
-          has_fight = true;
+          slot3 = content[2].toLowerCase();
+          if(slot3.length > 3){// ~fflogs T'aldarim Annie Sargatanas Aether
+            server_name = content[2];
+            character_info = await find_character(message, true, lodestone=-1, content[0] + '%20' + content[1], content[2], content[3]);
+          }
+          else{// ~fflogs T'aldarim Annie E9s Sargatanas
+            combatName = slot3
+            server_name = content[3];
+            character_info = await find_character(message, true, lodestone=-1, content[0] + '%20' + content[1], content[3]);
+            has_fight = true;
+          }
+          
           break;
       default:
           incorrect_format(message);
@@ -130,7 +118,7 @@ async function check_rank (message){
 
   let result = [undefined, undefined, undefined];
   if(character_info === undefined){return result;}
-  console.log(character_info.Server)
+  // console.log(character_info.Server)
   result = [server_to_server_region(character_info.Server), character_info.Server, character_info.Name]
   
   let output_msgs = "```ml\n";
@@ -177,9 +165,9 @@ async function check_rank (message){
   return result;  
 }
 
+/* Deprecated functions, might be used to improve act_auto_fflogs
 
-
-/* Beginning of auto rank checking process*/
+Beginning of auto rank checking process
 
 async function inner_check_rank(message, serverRegion,server_name,character_name,combatName){
   let character_firstName = character_name.split(' ')[0];
@@ -244,7 +232,8 @@ async function get_members(message){// no return; player_info in file
   
 }
 
-/* End of auto rank checking process*/
+End of auto rank checking process 
+*/
 
 
 
