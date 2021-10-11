@@ -37,11 +37,6 @@ async function inner_process(message, responses, server, combat_zone){
 }
 
 
-
-
-
-
-
 //return combat_zone_name, combat_difficulty(normal/savage), encounter_id, encounter_zone
 function find_combat_zone(combatName){
   switch(combatName){
@@ -66,7 +61,7 @@ function find_combat_zone(combatName){
   }
 }
 
-
+// return fflogs json files
 async function fetch_logs(message, name, server, zone=-1, encounterID=-1, partition=false, metric='dps', timeframe='historical', mode='parses'){
   // partition= None || 1; metric= dps || hps || bossdps || tankhps || playerspeed; timeframe= historical || today; mode= parses || rankings;
   let URL = `https://www.fflogs.com/v1/${mode}/character/${name}/${server}/${server_to_server_region(server)}?`;

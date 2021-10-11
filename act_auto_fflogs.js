@@ -6,6 +6,7 @@ const axios = require('axios');
 //https://www.fflogs.com/v1/parses/character/adfwsdg%20piper/adamantoise/NA?bracket=0&compare=0&timeframe=historical&api_key=60cf5fc24a60225a8d6e343ba3f31a21
 //https://www.fflogs.com/v1/parses/character/T%27aldarim%20Annie/Sargatanas/NA?bracket=0&compare=0&timeframe=historical&api_key=60cf5fc24a60225a8d6e343ba3f31a21
 
+// return fflogs json files
 async function fetch_logs(message, name, server, zone=-1, encounterID=-1, partition=false, metric='dps', timeframe='historical', mode='parses'){
     // partition= None || 1; metric= dps || hps || bossdps || tankhps || playerspeed; timeframe= historical || today; mode= parses || rankings;
     let URL = `https://www.fflogs.com/v1/${mode}/character/${name}/${server}/${server_to_server_region(server)}?`;
@@ -29,6 +30,7 @@ async function fetch_logs(message, name, server, zone=-1, encounterID=-1, partit
     }
 }
 
+// no return 
 async function act_auto(message){    
     // let ff14_embed = new Discord.MessageEmbed().setTimestamp();
     let output_msgs = "```ml\n";
@@ -86,7 +88,7 @@ async function act_auto(message){
     if(nums !== 0){
         output_msgs += `${zone_32.encounters[0].name}       Yes       ${Math.floor(responses.percentile)}      ${nums}\n`; 
     }else{
-        output_msgs += `${zone_32.encounters[0].name}       No         0       0\n`;       
+        output_msgs += `${zone_32.encounters[0].name}        No        0      0\n`;       
     }
 
     output_msgs += "```";
