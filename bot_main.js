@@ -71,8 +71,8 @@ client.on('message', message => {
 					cmds.act_auto(message);
 					// cmds.auto_check_party_member(message);
 					break;
-				case "relay":
-					cmds.local_relay(message);
+				case "relay": // under construction
+					// cmds.local_relay(message);
 					break;
 				case "m":
 					timeout_send(message, `!market Aether ${message.content.slice(3)}`)
