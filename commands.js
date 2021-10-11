@@ -1,7 +1,7 @@
 
 const files = require('./filesystem.js');
 const {help} = require('./Classes.js');
-const {local_relay} = require('./relay.js');
+// const {local_relay} = require('./relay.js');
 const {act_auto} = require('./act_auto_fflogs.js')
 
 module.exports = {
@@ -35,7 +35,7 @@ module.exports = {
 
     act_auto: (message) => act_auto(message),
 
-    local_relay: ()=> console.log("under construction"),//function(message){local_relay(message);},
+    // local_relay: ()=> console.log("under construction"),
 
     test: (message) => console.log(message.author)
 }
