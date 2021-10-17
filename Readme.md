@@ -91,7 +91,6 @@ Commands:(start with a '~')
 
 Database
 	Tables
-	
 		Column|Type|Collation|Nullable| Default
 		---|---|---|---|---
 		discord_id| character varying(32) || not null |
