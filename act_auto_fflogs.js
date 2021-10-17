@@ -35,15 +35,17 @@ async function act_auto(message){
     // let ff14_embed = new Discord.MessageEmbed().setTimestamp();
     let output_msgs = "```ml\n";
     let content = message.content.split(' ').slice(1);
-    content.splice(content.length-2);
-    let lname_server = content[content.length-1]; //AnnieSargatanas
-    let player_server = 'Sargatanas';
+    // console.log(content)    
+    let lname_server = content[1]; //AnnieSargatanas
+    player_server = undefined
+    let webhook = content[2]; // discord webhook url
     for (server in server_list){
         if(lname_server.includes(server_list[server])){
             player_server = server_list[server];
             content[1] = content[1].slice(0, lname_server.length - player_server.length)
         }    
     }
+    if(player_server == undefined){throw 'Player server is not in database.'}
     character_name = content[0]+'%20'+content[1];
 
     // let character_info = await find_character(message, true, lodestone=-1, character_name, player_server);
@@ -94,9 +96,10 @@ async function act_auto(message){
     output_msgs += "```";
     //timeout_send(message,output_msgs);
     for (hook in webhooks){
-        console.log(webhooks[hook])
+        // console.log(webhooks[hook])
         axios.post(webhooks[hook],{content : output_msgs});
     }   
+    axios.post(webhook,{content : output_msgs});
     
 }
 //https://www.fflogs.com/v1/parses/character/T'aldarim%20Annie/Sargatanas/NA?encounter=73&metric=dps&partition=1&timeframe=historical&api_key=60cf5fc24a60225a8d6e343ba3f31a21
@@ -105,4 +108,4 @@ async function act_auto(message){
 exports.act_auto = act_auto;
 
 
-// need integration from act_auto_fflogs with fflogs_analysis
+// need integration from act_auto_fflogs with fflogs_analysis   

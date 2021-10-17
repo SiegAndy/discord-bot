@@ -517,7 +517,7 @@ function server_to_server_region(server_name){
       let cur_region = server_regions[server_region];
       let data_centers = region_dc[cur_region]
         for(data_center in data_centers){ 
-            console.log([data_centers[data_center]])
+            // console.log([data_centers[data_center]])
             if(region_dc_servers[server_regions[server_region]][data_centers[data_center]].findIndex((server) => server.localeCompare(server_to_server(server_name)) === 0 ) !== -1){
                 return server_regions[server_region];
             }

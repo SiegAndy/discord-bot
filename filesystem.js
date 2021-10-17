@@ -41,29 +41,45 @@ async function create_user(message){
     //~create 483897747137626116 SiegAndy 3 25526101    
 
     let content = message.content.split(' ').slice(1);
-    
+    let cur_user = null;
     try {
         if(content.length === 0){//~create
             await pool.insert(message.author.id, message.author.username);
             timeout_send(message, `Thank you for using this bot!\nNew user ${message.author.username} added.`);
         }
-        else if(content.length > 0 && content.length < 5){
+        else if(content.length > 1 && content.length < 5){
             //await warning_helper(content[0]);
+            cur_user = await pool.user_info(message.author.id);
             let username;
-            if(content.length === 1){//~create [privilege]
-                username = message.author.username;
-                await pool.insert(message.author.id, message.author.username, parseInt(content[0]));
-            }
-            else if(content.length === 2){//~create [discord_id] [discord_username]
+            // if(content.length === 1){//~create [privilege]
+            //     if(parseInt(cur_user.rows[0].privilege) < parseInt(content[0])){
+            //         timeout_send(message, `You can't set privilege higher than you own.\nYour clearence level is: ${cur_user.rows[0].privilege}.`);    
+            //         pool.destroy();
+            //         return;
+            //     }
+            //     username = message.author.username;
+            //     await pool.insert(message.author.id, message.author.username, parseInt(content[0]));
+            // }
+            if(content.length === 2){//~create [discord_id] [discord_username]
                 username = content[1];
                 await pool.insert(content[0], content[1]);
             }
             else if(content.length === 3){//~create [discord_id] [discord_username] [privilege]
+                if(parseInt(cur_user.rows[0].privilege) >= parseInt(content[2])){
+                    timeout_send(message, `You can't set privilege higher than you own.\nYour clearence level is: ${cur_user.rows[0].privilege}.`);
+                    pool.destroy();
+                    return;                    
+                } 
                 username = content[1];
                 await pool.insert(content[0], content[1], parseInt(content[2]));
             }           
             else if(content.length === 4){//~create [discord_id] [discord_username] [privilege] [lodestone]
                 //console.log(content)
+                if(parseInt(cur_user.rows[0].privilege) >= parseInt(content[2])){
+                    timeout_send(message, `You can't set privilege higher than you own.\nYour clearence level is: ${cur_user.rows[0].privilege}.`);
+                    pool.destroy();
+                    return;                    
+                } 
                 let character_info = await loadstone.find_character(message,true, parseInt(content[3]));
                 username = content[1] + " with ff14 character: " + character_info.Name;
                 // console.log(character_info)
@@ -136,7 +152,7 @@ async function card(message){
     const pool = new Database();
     
     let ff14_character = "No character Linked";
-    let cur_user = null;
+    let cur_user, discord_user = null;
     try {
         cur_user = await pool.user_info(message.author.id);
         if (cur_user.rowCount === 0){
@@ -257,6 +273,7 @@ async function check_rank_temp(message){
                     \n https://na.finalfantasyxiv.com/lodestone/character/YOUR_lodestone_ID/')
                 }
                 else{
+                    console.log(cur_user);
                     message.content = `~fflogs ${cur_user.rows[0].fname+" "+cur_user.rows[0].lname} ${cur_user.rows[0].server} ${cur_user.rows[0].region}`
                     result = await fflogs.check_rank(message);
                 }

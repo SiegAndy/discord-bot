@@ -1,4 +1,5 @@
-
+Flow map for files:
+![](images/readme.png)
 
 
 bot_main.js: initialize bot and seperate and channel commands into commands.js
@@ -27,11 +28,10 @@ fflogs_analysis.js:
 
 	check_rank(): check the fflogs of character. ~fflogs [character_firstName] [character_lastName] [combatName] [server_name].
 
-act_auto_fflogs.js: ACT(Advanced Combat Tracker) with plugin Triggernometry script would output player join party message into discord channel
-					, and this file would parse that message to automately check player's logs from fflogs
+act_auto_fflogs.js: (new features!!)
+	ACT(Advanced Combat Tracker) with plugin Triggernometry script would output player join party message into discord channel, and this file would parse that message to automately check player's logs from fflogs
 
 loadstone.js: 
-	
 	find_character(): find character info by two get requesting to XIVAPI. 
 						1): With character_name and optional server_name to get lodestone_ID of that character.
 						2): With only URL to get lodestone infomation, private key and lodestone ID has been added to URL before function called.

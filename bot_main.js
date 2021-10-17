@@ -6,7 +6,7 @@ const WC = require('./web_crawler.js');
 
 const client = new Discord.Client();
 //client.msgs = require("./msgs.json"); using json for data storage, replacing by PostgreSQL
-const prefix = "~";
+const prefix = "!";
 
 client.on('ready', () => {
 	console.log('Ready!');
@@ -25,7 +25,7 @@ client.on('message', message => {
 	if (message.content.startsWith(prefix)){
 		//timeout_send(message, "WARNING!!\nDue to the change of storage and filesystem functions, most of functions are deprecated!\nPlease be aware correct function may result unexpected result!!", 60000);
 		var cmdmsg = message.content.replace(prefix,'').split(' ');
-		user_message_delete(message);
+		// user_message_delete(message);
 		if(message.author.bot){
 			switch(cmdmsg[0].toLowerCase()){
 				case 'auto':
