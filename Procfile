@@ -1,1 +1,1 @@
-web:node bot_main.js
+worker:node bot_main.js
