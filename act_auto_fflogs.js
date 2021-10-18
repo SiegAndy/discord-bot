@@ -25,7 +25,7 @@ async function fetch_logs(message, name, server, zone=-1, encounterID=-1, partit
         //console.log(URL);
         return await axios.get(URL);    
     } catch (error) {
-        timeout_send(message, 'Error happened when fetching data from fflogs, please check inputs!')
+        // timeout_send(message, 'Error happened when fetching data from fflogs, please check inputs!')
         console.log(error);
     }
 }

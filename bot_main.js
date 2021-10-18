@@ -3,6 +3,7 @@ const {timeout_send, user_message_delete, help} = require('./Classes.js');
 const Discord = require('discord.js');
 const cmds = require('./commands.js');
 const WC = require('./web_crawler.js');
+const app = require('./app.js')
 
 const client = new Discord.Client();
 //client.msgs = require("./msgs.json"); using json for data storage, replacing by PostgreSQL
