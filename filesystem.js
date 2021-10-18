@@ -103,12 +103,15 @@ async function create_user(message){
 async function link_ff14(message){
     const pool = new Database(); 
     let output = [], character_info=null;
-    async function helper(discord_id, username=null){
+    function helper(discord_id, username=null){
         
         output.push(character_info.Name, username||discord_id);
-        await pool.insert_ff14(discord_id, character_info.ID
+        
+        return pool.insert_ff14(discord_id, character_info.ID
             , character_info.Name.split(' ')[0], character_info.Name.split(' ')[1], character_info.Server
             , server_to_data_center(character_info.Server), server_to_server_region(character_info.Server))
+               
+        
     }
     
     let content = message.content.split(' ').slice(1);
@@ -116,19 +119,19 @@ async function link_ff14(message){
         if (content.length > 0 && content.length < 4){//~link [lodestone id]
             if (content.length === 1){
                 character_info = await loadstone.find_character(message,true, parseInt(content[0]));
-                helper(message.author.id, message.author.username);
+                await helper(message.author.id, message.author.username);
             }
             else if(content.length === 2){//~link [discord id] [lodestone id]
                 character_info = await loadstone.find_character(message,true, parseInt(content[1]));
-                helper(content[0]);
+                await helper(content[0]);
             }  
             else if(content.length === 3){//~link [character name](fname lname) [server]
-                character_info = await loadstone.find_character(message,flag,-1,content[0]+" "+content[1],content[2]);
-                helper(message.author.id, message.author.username);
+                character_info = await loadstone.find_character(message,true,-1,content[0]+" "+content[1],content[2]);
+                await helper(message.author.id, message.author.username);
             }   
             else if(content.length === 4){//~link [discord id] [character name](fname lname) [server]
-                character_info = await loadstone.find_character(message,flag,-1,content[0]+" "+content[1],content[2]);
-                helper(content[0]);
+                character_info = await loadstone.find_character(message,true,-1,content[1]+" "+content[2],content[3]);
+                await helper(content[0]);
             }       
             timeout_send(message, `Thank you for using this bot!\nNew ff14 Character: ${output[0]} linked with discord user: ${output[1]}.`);
         }
@@ -136,7 +139,7 @@ async function link_ff14(message){
             throw `More than 3 arguments accepted ${content}, invalid command.`;
         }
     } catch (error) {
-        if(error)timeout_send(message, "Error happened during process of linking ff14 character with discord user.");
+        timeout_send(message, "Error happened during process of linking ff14 character with discord user.");
         console.log(error);
     }
     finally{pool.destroy();}

@@ -32,10 +32,11 @@ class Database{
                                                         , PRIMARY KEY(ff14_loadstone, discord_id))`
         , function (err, result) {
         if (err) throw err; console.log(`TABLE ff14_user created/existed`);});
+        console.log("--------------------------------------------------")
         //console.log(this.con) 
     }
 
-    fetch(discord_id){ // 3:master/superuser, 2:admin, 1:collaborators, 0:users
+    async fetch(discord_id){ // 3:master/superuser, 2:admin, 1:collaborators, 0:users
         let pool=this.con; toString(discord_id);
         return new Promise(async function(resolve, rejects){
             let privilege=-1, content=null;
@@ -63,10 +64,10 @@ class Database{
         });
     }
 
-    user_info(discord_id){ // taking discord_id which is PK for discord_user table for other info
+    async user_info(discord_id){ // taking discord_id which is PK for discord_user table for other info
         let pool = this.con; toString(discord_id);         
         return new Promise((resolve, rejects)=>{
-            console.log(discord_id)
+            // console.log(discord_id)
             
         // discord_user.discord_id, privilege, discord_name, ff14_user.ff14_loadstone 
             let inner_pool = pool, inner_discord_id = discord_id;
@@ -94,7 +95,7 @@ class Database{
         });        
     }
 
-    insert(discord_id, discord_name=null, privilege=0, ff14_loadstone=-1, Fname='', Lname='', Server='', DataCenter='', Region=''){
+    async insert(discord_id, discord_name=null, privilege=0, ff14_loadstone=-1, Fname='', Lname='', Server='', DataCenter='', Region=''){
         let pool = this.con, usertable = this.usertable, ff14table = this.ff14table, insert_ff14 = this.insert_ff14; toString(discord_id);
         return new Promise(async function(resolve, rejects){
             let inner_ff14_loadstone = ff14_loadstone;
@@ -113,7 +114,7 @@ class Database{
         });
     }
 
-    insert_ff14(discord_id, ff14_loadstone=-1, Fname='', Lname='', Server='', DataCenter='', Region='', connection=null , table=null){
+    async insert_ff14(discord_id, ff14_loadstone=-1, Fname='', Lname='', Server='', DataCenter='', Region='', connection=null , table=null){
         let pool = connection || this.con, ff14table = table || this.ff14table; toString(discord_id);
         return new Promise(async function(resolve, rejects){
             if(ff14_loadstone > 0){
@@ -129,7 +130,7 @@ class Database{
         });
     }
 
-    update(discord_id, discord_name=null, privilege=0, flag=false, ff14_loadstone=-1, Fname='', Lname='', Server='', DataCenter='', Region=''){
+    async update(discord_id, discord_name=null, privilege=0, flag=false, ff14_loadstone=-1, Fname='', Lname='', Server='', DataCenter='', Region=''){
         //flag = true means need to update the part of ff14 info
         let pool = this.con, usertable = this.usertable, ff14table = this.ff14table, update_ff14 = this.update_ff14; toString(discord_id);
         return new Promise(async function(resolve, rejects){
@@ -149,7 +150,7 @@ class Database{
         });
     }
 
-    update_ff14(discord_id, ff14_loadstone, Fname='', Lname='', Server='', DataCenter='', Region='', connection=null, table=null){
+    async update_ff14(discord_id, ff14_loadstone, Fname='', Lname='', Server='', DataCenter='', Region='', connection=null, table=null){
         let pool = connection || this.con, ff14table = table || this.ff14table; toString(discord_id);
         return new Promise(async function(resolve, rejects){
             pool.query(`UPDATE `+ ff14table +` SET discord_id=$1, ff14_loadstone=$2, Fname=$3, Lname=$4
@@ -162,7 +163,7 @@ class Database{
         });
     }
 
-    delete(discord_id, ff14_loadstone=-1){      
+    async delete(discord_id, ff14_loadstone=-1){      
         let pool = this.con, usertable = this.usertable; toString(discord_id);
         return new Promise(async function(resolve, rejects){ 
             if (ff14_loadstone > 0){this.delete_ff14(discord_id, ff14_loadstone);}
@@ -201,8 +202,8 @@ class Database{
 
     }
 
-    destroy(){
-        console.log("--------------------------------------------------")
+    async destroy(){
+        console.log("--------------------------------------------------");
         this.con.end(function(err) {            
             if (err) {console.log(`error: + ${err.message}`); return;}            
         });

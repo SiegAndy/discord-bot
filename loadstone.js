@@ -43,7 +43,7 @@ async function find_character(message, flag=false, lodestone=-1, character_name=
     async function get(message, URL, character_name=""){
         try{
             let responses = await axios.get(URL);
-            console.log(URL)
+            // console.log(URL)
             if(character_name !== ""){//type 1, then processing responses with other function
                 return await process(message, responses, character_name);
             }
@@ -97,13 +97,13 @@ async function find_character(message, flag=false, lodestone=-1, character_name=
              
         }            
     }
-    console.log(contents)
+    // console.log(contents)
     if(contents.length === 1){ // ff14 lodestone id
-        console.log("Pass1")
+        // console.log("Pass1")
         return await get(message, add_private_key(default_URL + contents[0]));
     }
     else if(contents.length === 2){ // characterFname characterLname
-        console.log("Pass2")
+        // console.log("Pass2")
         let count = 0;
         let result = undefined;
         for (server in server_list){
@@ -121,7 +121,7 @@ async function find_character(message, flag=false, lodestone=-1, character_name=
         //                 , contents[0] + ' ' + contents[1]);
     }
     else if(contents.length === 3){ // characterFname characterLname server/datacenter/server_region
-        console.log("Pass3")
+        // console.log("Pass3")
         let count = 0;
         let result = undefined;
         if(!has_server){            
