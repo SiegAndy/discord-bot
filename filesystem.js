@@ -276,7 +276,7 @@ async function check_rank_temp(message){
                     \n https://na.finalfantasyxiv.com/lodestone/character/YOUR_lodestone_ID/')
                 }
                 else{
-                    console.log(cur_user);
+                    // console.log(cur_user);
                     message.content = `~fflogs ${cur_user.rows[0].fname+" "+cur_user.rows[0].lname} ${cur_user.rows[0].server} ${cur_user.rows[0].region}`
                     result = await fflogs.check_rank(message);
                 }
