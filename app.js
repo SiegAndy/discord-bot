@@ -9,7 +9,6 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 
-let a = null;
 app.post("/", (req, res)=>{
     console.log(req.body)
     body = req.body;
