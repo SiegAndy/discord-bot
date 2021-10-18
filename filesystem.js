@@ -263,7 +263,7 @@ async function check_rank_temp(message){
 
     const pool = new Database();
     let cur_user = null;
-    console.log(content)
+    // console.log(content)
     try {
         if(content.length == 0){ // ~fflogs => needs a pre-linked ff14 character
             cur_user = await pool.user_info(message.author.id);
