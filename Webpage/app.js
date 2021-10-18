@@ -21,4 +21,6 @@ class web_connection{
     }
 }
 
+exports.web_connection = web_connection;
+
 
