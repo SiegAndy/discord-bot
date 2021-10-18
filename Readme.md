@@ -1,4 +1,8 @@
-<br><br><br><br>
+Link to invite the bot: https://discord.com/api/oauth2/authorize?client_id=682677867230134272&permissions=536572591937&scope=bot
+
+Documentation for the bot: https://discord-test-andy.herokuapp.com/
+
+<br><br>
 
 # Commands:(start with a '~')
 
