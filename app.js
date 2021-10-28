@@ -16,14 +16,10 @@ app.get("/", (req, res)=>{
 
 app.post("/wakeup", (req, res)=>{
     // console.log(req.body)
-    let time = new Date().toString();
-    let msg = `Received ${req.body.Hello} message at ${time}`;
-    console.log(req);
+    console.log(`Received ${req.body.Hello} message at ${new Date().toString()}`);
     res.status(200);
-    res.send(msg);
-    
-    setTimeout(()=>{wakeup()}, 60000);
-    
+    res.send('Received');
+    setTimeout(()=>{wakeup()}, 1200000); //sending hello message for each 20 minute
 })
 
 app.post("/auto", (req, res)=>{
@@ -44,11 +40,14 @@ app.listen(Port, (error)=>{
 })
 
 function wakeup(){
+    let time = new Date().toString();
     axios.post('https://discord-ff14.herokuapp.com/wakeup', {'Hello': hello})
     .then(function(response) {
-        console.log(response.body);
+        if (response.data == 'Received'){console.log(`Hello message received by wakeup page at ${new Date().toString()}`);}
+        else{console.log(`Unexpected message: ${response.data}`);}
     })
     .catch(function (error) {
+        console.log(`Error happened when sending Hello message to wakeup page at ${time}`);
         console.log(error);
     });
 }
