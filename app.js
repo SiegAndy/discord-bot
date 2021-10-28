@@ -46,7 +46,7 @@ app.listen(Port, (error)=>{
 function wakeup(){
     axios.post('https://discord-ff14.herokuapp.com/wakeup', {'Hello': hello})
     .then(function(response) {
-        console.log(response);
+        console.log(response.body);
     })
     .catch(function (error) {
         console.log(error);
