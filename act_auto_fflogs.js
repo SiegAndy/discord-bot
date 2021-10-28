@@ -1,3 +1,4 @@
+require('dotenv').config(__dirname + '/.env');
 const{webhooks, server_list, zone_38, server_to_server_region, timeout_send, FluentFFlogs, zone_30, zone_32} = require('./Classes.js')
 const axios = require('axios');
 
@@ -22,11 +23,12 @@ async function fetch_logs(message, name, server, zone=-1, encounterID=-1, partit
     }
     URL += `&timeframe=${timeframe}&api_key=${process.env.FFLOGS_API_KEY}`;
     try {
-        //console.log(URL);
+        console.log(URL);
         return await axios.get(URL);    
     } catch (error) {
         // timeout_send(message, 'Error happened when fetching data from fflogs, please check inputs!')
-        console.log(error);
+        console.log('Error happened when ~auto fetching data from fflogs, please check inputs!')
+        // console.log(error);
     }
 }
 

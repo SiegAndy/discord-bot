@@ -1,10 +1,9 @@
-require('dotenv').config({path: "C:/Users/zc470/Desktop/Extra/Discord-bot/.env"});
+require('dotenv').config(__dirname + '/.env');
 const {timeout_send, user_message_delete, help} = require('./Classes.js');
 const Discord = require('discord.js');
 const cmds = require('./commands.js');
 const WC = require('./web_crawler.js');
-const app = require('./app.js')
-
+const hello = 'hello'
 const client = new Discord.Client();
 //client.msgs = require("./msgs.json"); using json for data storage, replacing by PostgreSQL
 const prefix = "~";
@@ -110,3 +109,5 @@ client.on('message', message => {
 });
 
 client.login(process.env.DISCORD_TEST_APP_API_KEY);
+
+exports.hello = hello;

@@ -141,7 +141,7 @@ Foreign-key constraints:
 # File Logistic
 
 ## Flow map for files:
-![](images/readme.png)
+![](public/images/readme.png)
 
 bot_main.js: 
 

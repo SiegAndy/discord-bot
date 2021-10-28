@@ -1,5 +1,5 @@
 const {Pool, Client} = require('pg') // const Client = require('pg').Client
-require('dotenv').config({path: "C:/Users/zc470/Desktop/Extra/Discord-bot/.env"});
+require('dotenv').config(__dirname + '/.env');
 
 class Database{
     constructor() {

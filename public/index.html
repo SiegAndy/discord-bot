@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="css/index.css" type="text/css">
+    <link rel="icon" href="image/favicon.ico" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation for discord-ff14 bot</title>
+</head>
+<body background="image/discord_background.png" alink="#017bf5" vlink="#00A6FF">
+    <br />
+    <div class="title">
+        <h1>
+            Documentation for Discord-FF14 bot
+            <a href="https://github.com/SiegAndy/Discord-bot" target="_blank" class="link">Github Repo</a>
+            <a href="https://discord.com/api/oauth2/authorize?client_id=682677867230134272&permissions=536572591937&scope=bot" target="_blank" class="link">Invite me!!</a>
+    </div>
+    <div class="div_command">
+        <h2 class="header2">Commands: (start with a '~')</h2>
+        <div>
+            <ul>
+                <h2 class="header2">create:</h2>
+                <p class="note"> privilege: 3:superuser, 2:admin, 1:collaborators, 0:users</p>
+                
+                <h3 class="header3">~create</h3>
+                <p class="return">No returns, create discord profile for current user.</p>
+                <p class="return">The error happens only when user already in the database.</p> 
+                <p class="example">Example: ~create</p> 
+
+                <h3 class="header3">~create [discord_id] [discord_username]</h3>
+                <p class="return">No returns, create discord profile for current user. </p>
+                <p class="return">The error happens only when user already in the database.</p> 
+                <p class="example">Example: ~create 123456789012345678 myusername</p>
+
+                <h3 class="header3">~create [discord_id] [discord_username] [privilege]</h3>
+                <p class="return">No returns, create discord profile for current user.</p>
+                <p class="return">The error happens only when user already in the database or current user privilege is not sufficient to set target privilege.</p> 
+                <p class="example">Example: ~create 123456789012345678 myusername 3</p>  
+
+                <h3 class="header3">~create [discord_id] [discord_username] [privilege] [lodestone]</h3>
+                <p class="return">No returns, create discord profile for current user.</p>
+                <p class="return">The error happens only when user already in the database.</p> 
+                <p class="example">Example: ~create 123456789012345678 myusername 3 12345678</p>  
+            </ul>
+        </div>
+        <div>
+            <ul>
+                <h2 class="header2">link:</h2>
+
+                <h3 class="header3">~link [lodestone id]</h3>
+                <p class="return">
+                    No returns.
+                    Link current user discord profile with target Character. The error happens only when character already linked with current user in the database.</p> 
+                <p class="example">Example: ~link 12345678</p>
+
+                <h3 class="header3">~link [discord id] [lodestone id]</h3>
+                <p class="return">
+                    No returns.
+                    Link target user discord profile with target Character. The error happens only when character already linked with current user in the database.</p> 
+                <p class="example">Example: ~link 123456789012345678 12345678</p>
+
+                <h3 class="header3">~link [character name](fname lname) [server]</h3>
+                <p class="return">
+                    No returns.
+                    Link current user discord profile with target Character using character name and server. The error happens only when character already linked with current user in the database.</p> 
+                <p class="example">Example: ~link myfirstname mylastnem myserver</p>
+
+                <h3 class="header3">~link [discord id] [character name](fname lname) [server]</h3>
+                <p class="return">
+                    No returns.
+                    Link target user discord profile with target Character using character name and server. The error happens only when character already linked with current user in the database.</p> 
+                <p class="example">Example: ~link 123456789012345678 myfirstname mylastnem myserver</p>
+            </ul>
+        </div>
+        <div>
+            <ul>
+                <h2 class="header2">whoami:</h2>
+                <h3 class="header3">~whoami</h3>
+                <p class="return">Returns embeded discord user information and final fantasy character information.</p> 
+                <p class="return">If there are multiple character with the same name, returns the one with highest lodestone id.</p> 
+                <p class="return">If current user is not in the database, create a new user profile and return this user information.</p> 
+                <p class="return">If no final fantasy character linked with current user, only returns user profile.</p> 
+                <p class="example">Example: ~whoami</p> 
+            </ul>
+        </div>
+        <div>
+            <ul>
+                <h2 class="header2">fflogs:</h2>
+                <h3 class="header3">~fflogs [character firstname] [character lastname]</h3>
+                <p class="return">
+                    Returns the highest combat ranking of the final fantasy character for all current tier fights. 
+                    If there are multiple character with the same name, returns the one with most number of combat logs.</p> 
+                <p class="example">Example: ~fflogs T'aldarim Annie</p> 
+
+                <h3 class="header3">
+                    ~fflogs [character firstname] [character lastname] [server name] 
+                    <span style="margin-left: 5%;">(Recommanded!!)</span>
+                </h3>
+                <p class="return">Returns the highest combat ranking of the final fantasy character for all current tier fights.</p> 
+                <p class="example">Example: ~fflogs T'aldarim Annie Sargatanas</p> 
+
+                <h3 class="header3">~fflogs [character firstname] [character lastname] [server name] [datacenter]</h3>
+                <p class="return">Returns the highest combat ranking of the final fantasy character for all current tier fights.</p> 
+                <p class="example">Example: ~fflogs T'aldarim Annie E9s Sargatanas Aether</p> 
+
+                <h3 class="header3">~fflogs [character firstname] [character lastname] [combat abbr.]</h3>
+                <p class="return">Returns the highest combat ranking of the final fantasy character for [combat abbr.].</p> 
+                <p class="example">Example: ~fflogs T'aldarim Annie E9s</p> 
+
+                <h3 class="header3">~fflogs [character firstname] [character lastname] [combat abbr.] [server name]</h3>
+                <p class="return">Returns the highest combat ranking of the final fantasy character for [combat abbr.].</p> 
+                <p class="example">Example: ~fflogs T'aldarim Annie E9s Sargatanas</p> 
+
+                <h3 class="header3">~fflogs</h3>
+                <p class="return">Returns the highest combat ranking of the final fantasy character for all current tier fights.</p> 
+                <p class="return">Need a discord user linked with at least one final fantasy character. If more than one character are linked, return the first character linked</p> 
+                <p class="example">Example: ~fflogs</p> 
+            </ul>
+        </div>
+    </div>
+    <br><br><br><br>
+    <div class="div_command">
+        <h2 class="header2">Database</h2>
+        <div>
+            <ul>
+                <h2 class="header2">tables</h2>
+                <ul>
+                    <h3 class="header3">Discord User Table</h3>
+                    <table>
+                        <tr>
+                            <th>Column</th>
+                            <th>Type</th>
+                            <th>Collation</th>
+                            <th>Nullable</th>
+                            <th>Default</th>
+                        </tr>
+                        <tr>
+                            <th>discord_id</th>
+                            <th>character varying(32)</th>
+                            <th></th>
+                            <th>not null</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th>privilege</th>
+                            <th>integer</th>
+                            <th></th>
+                            <th>not null</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th>discord_name</th>
+                            <th>character varying(32)</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </table>
+                    <p class="return">Indexes:</p>
+                    <p class="example">"discord_user_pkey" PRIMARY KEY, btree (discord_id)</p> 
+                    <p class="return">Referenced by:</p>
+                    <p class="example">TABLE "ff14_user" CONSTRAINT "ff14_user_discord_id_fkey" FOREIGN KEY (discord_id) REFERENCES discord_user(discord_id) ON UPDATE CASCADE ON DELETE CASCADE</p> 
+                </ul>
+                <ul>
+                    <h3 class="header3">Final Fantasy 14 Character Table</h3>
+                    <table>
+                        <tr>
+                            <th>Column</th>
+                            <th>Type</th>
+                            <th>Collation</th>
+                            <th>Nullable</th>
+                            <th>Default</th>
+                        </tr>
+                        <tr>
+                            <th>discord_id</th>
+                            <th>character varying(32)</th>
+                            <th></th>
+                            <th>not null</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th>ff14_loadstone</th>
+                            <th>bigint</th>
+                            <th></th>
+                            <th>not null</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th>fname</th>
+                            <th>character varying(32)</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th>lname</th>
+                            <th>character varying(32)</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th>server</th>
+                            <th>character varying(32)</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th>datacenter</th>
+                            <th>character varying(32)</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th>region</th>
+                            <th>character varying(32)</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </table>
+                    <p class="return">Indexes:</p>
+                    <p class="example">"ff14_user_pkey" PRIMARY KEY, btree (ff14_loadstone, discord_id)</p> 
+                    <p class="return">Referenced by:</p>
+                    <p class="example">"ff14_user_discord_id_fkey" FOREIGN KEY (discord_id) REFERENCES discord_user(discord_id) ON UPDATE CASCADE ON DELETE CASCADE</p> 
+                </ul>
+                <ul>
+                    <h3 class="header3">Typical response when doing select on discord user and ff14 character</h3>
+                    <textarea class="snippet">
+                        Result {
+                            command: 'SELECT',
+                            rowCount: 1,
+                            oid: null,
+                            rows: [
+                            {
+                                discord_id: '123456789012345678',
+                                privilege: 3,
+                                discord_name: 'myusername',
+                                ff14_loadstone: '12345678',
+                                fname: "myfirstname",
+                                lname: 'mylastname',
+                                server: 'myserver',
+                                datacenter: 'mydatacenter',
+                                region: 'myregion'
+                            }
+                            ],
+                            fields: [
+                            Field {
+                                name: 'discord_id',
+                                tableID: 22476642,
+                                columnID: 1,
+                                dataTypeID: 1043,
+                                dataTypeSize: -1,
+                                dataTypeModifier: 36,
+                                format: 'text'
+                            },
+                            Field {
+                                name: 'privilege',
+                                tableID: 22476642,
+                                columnID: 2,
+                                dataTypeID: 23,
+                                dataTypeSize: 4,
+                                dataTypeModifier: -1,
+                                format: 'text'
+                            },
+                            Field {
+                                name: 'discord_name',
+                                tableID: 22476642,
+                                columnID: 3,
+                                dataTypeID: 1043,
+                                dataTypeSize: -1,
+                                dataTypeModifier: 36,
+                                format: 'text'
+                            },
+                            Field {
+                                name: 'discord_id',
+                                tableID: 22476647,
+                                columnID: 1,
+                                dataTypeID: 1043,
+                                dataTypeSize: -1,
+                                dataTypeModifier: 36,
+                                format: 'text'
+                            },
+                            Field {
+                                name: 'ff14_loadstone',
+                                tableID: 22476647,
+                                columnID: 2,
+                                dataTypeID: 20,
+                                dataTypeSize: 8,
+                                dataTypeModifier: -1,
+                                format: 'text'
+                            },
+                            Field {
+                                name: 'fname',
+                                tableID: 22476647,
+                                columnID: 3,
+                                dataTypeID: 1043,
+                                dataTypeSize: -1,
+                                dataTypeModifier: 36,
+                                format: 'text'
+                            },
+                            Field {
+                                name: 'lname',
+                                tableID: 22476647,
+                                columnID: 4,
+                                dataTypeID: 1043,
+                                dataTypeSize: -1,
+                                dataTypeModifier: 36,
+                                format: 'text'
+                            },
+                            Field {
+                                name: 'server',
+                                tableID: 22476647,
+                                columnID: 5,
+                                dataTypeID: 1043,
+                                dataTypeSize: -1,
+                                dataTypeModifier: 36,
+                                format: 'text'
+                            },
+                            Field {
+                                name: 'datacenter',
+                                tableID: 22476647,
+                                columnID: 6,
+                                dataTypeID: 1043,
+                                dataTypeSize: -1,
+                                dataTypeModifier: 36,
+                                format: 'text'
+                            },
+                            Field {
+                                name: 'region',
+                                tableID: 22476647,
+                                columnID: 7,
+                                dataTypeID: 1043,
+                                dataTypeSize: -1,
+                                dataTypeModifier: 36,
+                                format: 'text'
+                            }
+                            ],
+                            _parsers: [
+                            [Function: noParse],
+                            [Function: parseInteger],
+                            [Function: noParse],
+                            [Function: noParse],
+                            [Function: parseBigInteger],
+                            [Function: noParse],
+                            [Function: noParse],
+                            [Function: noParse],
+                            [Function: noParse],
+                            [Function: noParse]
+                            ],
+                            _types: TypeOverrides {
+                            _types: {
+                                getTypeParser: [Function: getTypeParser],
+                                setTypeParser: [Function: setTypeParser],
+                                arrayParser: [Object],
+                                builtins: [Object]
+                            },
+                            text: {},
+                            binary: {}
+                            },
+                            RowCtor: null,
+                            rowAsArray: false
+                        }
+                    </textarea >
+                </ul>
+            </ul>
+        </div>
+    </div>    
+</body>
+</html>
