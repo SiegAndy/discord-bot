@@ -35,12 +35,13 @@ async function fetch_logs(message, name, server, zone=-1, encounterID=-1, partit
 // no return 
 async function act_auto(message){    
     // let ff14_embed = new Discord.MessageEmbed().setTimestamp();
+    console.log(message);
     let output_msgs = "```ml\n";
     let content = message.content.split(' ').slice(1);
-    console.log(content)    
+    // console.log(content)    
     let lname_server = content[1]; //AnnieSargatanas
     player_server = undefined
-    let webhook = content[2]; // discord webhook url
+    let webhook = content[3]; // discord webhook url
     for (server in server_list){
         if(lname_server.includes(server_list[server])){
             player_server = server_list[server];
