@@ -100,7 +100,8 @@ async function act_auto(message){
     for (hook in webhooks){
         // console.log(webhooks[hook])
         axios.post(webhooks[hook],{content : output_msgs});
-    }   
+    }  
+    print(webhook);
     axios.post(webhook,{content : output_msgs});
     
 }
