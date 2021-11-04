@@ -37,7 +37,7 @@ async function act_auto(message){
     // let ff14_embed = new Discord.MessageEmbed().setTimestamp();
     let output_msgs = "```ml\n";
     let content = message.content.split(' ').slice(1);
-    // console.log(content)    
+    console.log(content)    
     let lname_server = content[1]; //AnnieSargatanas
     player_server = undefined
     let webhook = content[2]; // discord webhook url
@@ -101,7 +101,7 @@ async function act_auto(message){
         // console.log(webhooks[hook])
         axios.post(webhooks[hook],{content : output_msgs});
     }  
-    print(webhook);
+    console.log(webhook);
     axios.post(webhook,{content : output_msgs});
     
 }
