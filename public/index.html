@@ -3,6 +3,7 @@
 <head>
     <link rel="stylesheet" href="css/index.css" type="text/css">
     <link rel="icon" href="image/favicon.ico" type="image/x-icon">
+    <script type="text/javascript" src="js/fflogs_attributes.js"></script>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,14 +31,16 @@
         <h3>New feature!! <a href="https://discord-ff14.herokuapp.com/auto" target="_blank" class="link">Instruction Here</a>
         <p>When new player joins the part, send their log info to the designate discord channel via a discord hook.</p></h3><br><br>
     </div>
+    
     <div id="payload" class="div_command" style="margin-top: 0px;">
         <h2>Choose parameters for fflogs queries and copy it:</h2>
     </div>
-   <div class="grid-container" >
+    <div class="grid-container" >
         <div class="grid1">
             <div class="grid2">
                 Combat Zone:<br>
-                <label class="options"><input type="radio" id="Current_raid_tier" name="Combat Zone" checked onclick="updatebox()"> Current Raid Tier</label>
+                <label class="options"><input type="radio" id="Both" name="Combat Zone" checked onclick="updatebox()"> Both</label>
+                <label class="options"><input type="radio" id="Current_raid_tier" name="Combat Zone" onclick="updatebox()"> Current Raid Tier</label>
                 <label class="options"><input type="radio" id="Ultimates" name="Combat Zone" onclick="updatebox()"> Ultimates</label>
             </div>
             <br>
@@ -71,17 +74,17 @@
         <div class="grid3">
             Result JSON Payload: (paste it in 'Payload to send' field!)<br><br>
             <textarea id="attributes" class="JSONPayload" readonly>{
-    "character": "${player}",
-    "combatZone": "current raid tier",
-    "echo": "no",
-    "metric": "dps",
-    "frame": "today",
-    "webhook": "mywebhook",
-    "timeframe": "today"
+	"character": "${player}",
+	"combatZone": "both",
+	"echo": "no",
+	"metric": "dps",
+	"timeframe": "today",
+	"webhook": "mywebhook"
 }</textarea>
         <input type="button" value="Click ME to copy" id="JSON" onclick="copytoclipboard('JSON')">
         </div>
    </div>
+
     <div id="Commands" class="div_command">
         <h2>Commands: (start with a '~')</h2>
         <div>
