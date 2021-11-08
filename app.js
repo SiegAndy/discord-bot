@@ -2,7 +2,7 @@ const express = require('express')
 const app = express();
 const axios = require('axios');
 
-const {act_auto} = require('./act_auto_fflogs.js');
+const {act_auto,test} = require('./act_auto_fflogs.js');
 const {hello} = require('./bot_main.js');
 const Port = process.env.PORT || 3000;
 
@@ -22,13 +22,18 @@ app.post("/wakeup", (req, res)=>{
     setTimeout(()=>{wakeup()}, 1200000); //sending hello message for each 20 minute
 })
 
+app.get("/auto", (req, res)=>{
+    res.sendFile(__dirname + '/public/act_auto.html');
+})
+
 app.post("/auto", (req, res)=>{
     // console.log(req.body)
     body = req.body;
-    let message = {};
-    message.content = `~auto ${body.character} ${body.webhook}`;
-    // console.log(message)
-    act_auto(message);
+    // let message = {};
+    // message.content = `~auto ${body.character} ${body.webhook}`;
+    // // console.log(message)
+    // act_auto(message);
+    test(body);
     res.status(200);
     res.send(`Player received: ${body.character}\nWebhook received: ${body.webhook}`);
 })

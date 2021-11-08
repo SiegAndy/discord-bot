@@ -9,36 +9,102 @@
     <title>Documentation for discord-ff14 bot</title>
 </head>
 <body background="image/discord_background.png" alink="#017bf5" vlink="#00A6FF">
-    <br />
     <div class="title">
         <h1>
             Documentation for Discord-FF14 bot
             <a href="https://github.com/SiegAndy/Discord-bot" target="_blank" class="link">Github Repo</a>
             <a href="https://discord.com/api/oauth2/authorize?client_id=682677867230134272&permissions=536572591937&scope=bot" target="_blank" class="link">Invite me!!</a>
     </div>
-    <div class="div_command">
-        <h2 class="header2">Commands: (start with a '~')</h2>
+
+    <div class="loc">
+        <h2>List of content</h2>
+        <ul class="listofcontent">
+            <li><a href="#Updates" target="_self" class="link">Updates</a></li>
+            <li><a href="#Commands" target="_self" class="link">Commands</a></li>
+            <li><a href="#Database" target="_self" class="link">Database</a></li>
+        </ul>
+    </div>
+    <div id="Updates" class="div_command">
+        <h2>Version: 0.2</h2>
+        <h2>Update:  2021/11/07</h2>
+        <h3>New feature!! <a href="https://discord-ff14.herokuapp.com/auto" target="_blank" class="link">Instruction Here</a>
+        <p>When new player joins the part, send their log info to the designate discord channel via a discord hook.</p></h3><br><br>
+    </div>
+    <div id="payload" class="div_command" style="margin-top: 0px;">
+        <h2>Choose parameters for fflogs queries and copy it:</h2>
+    </div>
+   <div class="grid-container" >
+        <div class="grid1">
+            <div class="grid2">
+                Combat Zone:<br>
+                <label class="options"><input type="radio" id="Current_raid_tier" name="Combat Zone" checked onclick="updatebox()"> Current Raid Tier</label>
+                <label class="options"><input type="radio" id="Ultimates" name="Combat Zone" onclick="updatebox()"> Ultimates</label>
+            </div>
+            <br>
+            <div class="grid2">
+                Filter metric:<br>
+                <label class="options"><input type="radio" id="dps" name="metric" checked onclick="updatebox()"> DPS</label>
+                <label class="options"><input type="radio" id="hps" name="metric" onclick="updatebox()"> HPS</label>
+                <label class="options"><input type="radio" id="playerspeed" name="metric" onclick="updatebox()"> Player Speed</label>
+            </div>
+        </div>
+        <div class="grid1" >
+            <div class="grid2">
+                Include Parse(s) with Echo:<br>
+                <label class="options"><input type="radio" id="without_echo" name="Echo" checked onclick="updatebox()"> No</label>
+                <label class="options"><input type="radio" id="with_echo" name="Echo" onclick="updatebox()"> Yes</label>
+            </div>
+            <br>
+            <div class="grid2">
+                Time Frame:<br>
+                <label class="options"><input type="radio" id="today" name="timeframe" checked onclick="updatebox()"> Today</label>
+                <label class="options"><input type="radio" id="historical" name="timeframe" onclick="updatebox()"> Historical</label>
+                
+            </div>
+        </div>
+        <div class="grid3">
+            Target Discord Hook URL:<br>
+            <label class="options"><input type="text" id="webhook" name="webhook" value="mywebhook" class="webhookurl"></label><br>
+            <label class="options"><input type="button" id="webhook_confirm" name="webhook_confirm" value="Confirm" onclick="updatebox()"></label>
+            <label class="options"><input type="button" id="webhook_reset" name="webhook_reset" value="Reset" onclick="reset_hook()"></label>
+        </div>
+        <div class="grid3">
+            Result JSON Payload: (paste it in 'Payload to send' field!)<br><br>
+            <textarea id="attributes" class="JSONPayload" readonly>{
+    "character": "${player}",
+    "combatZone": "current raid tier",
+    "echo": "no",
+    "metric": "dps",
+    "frame": "today",
+    "webhook": "mywebhook",
+    "timeframe": "today"
+}</textarea>
+        <input type="button" value="Click ME to copy" id="JSON" onclick="copytoclipboard('JSON')">
+        </div>
+   </div>
+    <div id="Commands" class="div_command">
+        <h2>Commands: (start with a '~')</h2>
         <div>
             <ul>
-                <h2 class="header2">create:</h2>
+                <h2>create:</h2>
                 <p class="note"> privilege: 3:superuser, 2:admin, 1:collaborators, 0:users</p>
                 
-                <h3 class="header3">~create</h3>
+                <h3>~create</h3>
                 <p class="return">No returns, create discord profile for current user.</p>
                 <p class="return">The error happens only when user already in the database.</p> 
                 <p class="example">Example: ~create</p> 
 
-                <h3 class="header3">~create [discord_id] [discord_username]</h3>
+                <h3>~create [discord_id] [discord_username]</h3>
                 <p class="return">No returns, create discord profile for current user. </p>
                 <p class="return">The error happens only when user already in the database.</p> 
                 <p class="example">Example: ~create 123456789012345678 myusername</p>
 
-                <h3 class="header3">~create [discord_id] [discord_username] [privilege]</h3>
+                <h3>~create [discord_id] [discord_username] [privilege]</h3>
                 <p class="return">No returns, create discord profile for current user.</p>
                 <p class="return">The error happens only when user already in the database or current user privilege is not sufficient to set target privilege.</p> 
                 <p class="example">Example: ~create 123456789012345678 myusername 3</p>  
 
-                <h3 class="header3">~create [discord_id] [discord_username] [privilege] [lodestone]</h3>
+                <h3>~create [discord_id] [discord_username] [privilege] [lodestone]</h3>
                 <p class="return">No returns, create discord profile for current user.</p>
                 <p class="return">The error happens only when user already in the database.</p> 
                 <p class="example">Example: ~create 123456789012345678 myusername 3 12345678</p>  
@@ -46,27 +112,27 @@
         </div>
         <div>
             <ul>
-                <h2 class="header2">link:</h2>
+                <h2>link:</h2>
 
-                <h3 class="header3">~link [lodestone id]</h3>
+                <h3>~link [lodestone id]</h3>
                 <p class="return">
                     No returns.
                     Link current user discord profile with target Character. The error happens only when character already linked with current user in the database.</p> 
                 <p class="example">Example: ~link 12345678</p>
 
-                <h3 class="header3">~link [discord id] [lodestone id]</h3>
+                <h3>~link [discord id] [lodestone id]</h3>
                 <p class="return">
                     No returns.
                     Link target user discord profile with target Character. The error happens only when character already linked with current user in the database.</p> 
                 <p class="example">Example: ~link 123456789012345678 12345678</p>
 
-                <h3 class="header3">~link [character name](fname lname) [server]</h3>
+                <h3>~link [character name](fname lname) [server]</h3>
                 <p class="return">
                     No returns.
                     Link current user discord profile with target Character using character name and server. The error happens only when character already linked with current user in the database.</p> 
                 <p class="example">Example: ~link myfirstname mylastnem myserver</p>
 
-                <h3 class="header3">~link [discord id] [character name](fname lname) [server]</h3>
+                <h3>~link [discord id] [character name](fname lname) [server]</h3>
                 <p class="return">
                     No returns.
                     Link target user discord profile with target Character using character name and server. The error happens only when character already linked with current user in the database.</p> 
@@ -75,8 +141,8 @@
         </div>
         <div>
             <ul>
-                <h2 class="header2">whoami:</h2>
-                <h3 class="header3">~whoami</h3>
+                <h2>whoami:</h2>
+                <h3>~whoami</h3>
                 <p class="return">Returns embeded discord user information and final fantasy character information.</p> 
                 <p class="return">If there are multiple character with the same name, returns the one with highest lodestone id.</p> 
                 <p class="return">If current user is not in the database, create a new user profile and return this user information.</p> 
@@ -86,47 +152,46 @@
         </div>
         <div>
             <ul>
-                <h2 class="header2">fflogs:</h2>
-                <h3 class="header3">~fflogs [character firstname] [character lastname]</h3>
+                <h2>fflogs:</h2>
+                <h3>~fflogs [character firstname] [character lastname]</h3>
                 <p class="return">
                     Returns the highest combat ranking of the final fantasy character for all current tier fights. 
                     If there are multiple character with the same name, returns the one with most number of combat logs.</p> 
                 <p class="example">Example: ~fflogs T'aldarim Annie</p> 
 
-                <h3 class="header3">
+                <h3>
                     ~fflogs [character firstname] [character lastname] [server name] 
                     <span style="margin-left: 5%;">(Recommanded!!)</span>
                 </h3>
                 <p class="return">Returns the highest combat ranking of the final fantasy character for all current tier fights.</p> 
                 <p class="example">Example: ~fflogs T'aldarim Annie Sargatanas</p> 
 
-                <h3 class="header3">~fflogs [character firstname] [character lastname] [server name] [datacenter]</h3>
+                <h3>~fflogs [character firstname] [character lastname] [server name] [datacenter]</h3>
                 <p class="return">Returns the highest combat ranking of the final fantasy character for all current tier fights.</p> 
                 <p class="example">Example: ~fflogs T'aldarim Annie E9s Sargatanas Aether</p> 
 
-                <h3 class="header3">~fflogs [character firstname] [character lastname] [combat abbr.]</h3>
+                <h3>~fflogs [character firstname] [character lastname] [combat abbr.]</h3>
                 <p class="return">Returns the highest combat ranking of the final fantasy character for [combat abbr.].</p> 
                 <p class="example">Example: ~fflogs T'aldarim Annie E9s</p> 
 
-                <h3 class="header3">~fflogs [character firstname] [character lastname] [combat abbr.] [server name]</h3>
+                <h3>~fflogs [character firstname] [character lastname] [combat abbr.] [server name]</h3>
                 <p class="return">Returns the highest combat ranking of the final fantasy character for [combat abbr.].</p> 
                 <p class="example">Example: ~fflogs T'aldarim Annie E9s Sargatanas</p> 
 
-                <h3 class="header3">~fflogs</h3>
+                <h3>~fflogs</h3>
                 <p class="return">Returns the highest combat ranking of the final fantasy character for all current tier fights.</p> 
                 <p class="return">Need a discord user linked with at least one final fantasy character. If more than one character are linked, return the first character linked</p> 
                 <p class="example">Example: ~fflogs</p> 
             </ul>
         </div>
     </div>
-    <br><br><br><br>
-    <div class="div_command">
-        <h2 class="header2">Database</h2>
+    <div id="Database" class="div_command">
+        <h2>Database</h2>
         <div>
             <ul>
-                <h2 class="header2">tables</h2>
+                <h2>tables</h2>
                 <ul>
-                    <h3 class="header3">Discord User Table</h3>
+                    <h3>Discord User Table</h3>
                     <table>
                         <tr>
                             <th>Column</th>
@@ -163,7 +228,7 @@
                     <p class="example">TABLE "ff14_user" CONSTRAINT "ff14_user_discord_id_fkey" FOREIGN KEY (discord_id) REFERENCES discord_user(discord_id) ON UPDATE CASCADE ON DELETE CASCADE</p> 
                 </ul>
                 <ul>
-                    <h3 class="header3">Final Fantasy 14 Character Table</h3>
+                    <h3>Final Fantasy 14 Character Table</h3>
                     <table>
                         <tr>
                             <th>Column</th>
@@ -228,7 +293,7 @@
                     <p class="example">"ff14_user_discord_id_fkey" FOREIGN KEY (discord_id) REFERENCES discord_user(discord_id) ON UPDATE CASCADE ON DELETE CASCADE</p> 
                 </ul>
                 <ul>
-                    <h3 class="header3">Typical response when doing select on discord user and ff14 character</h3>
+                    <h3>Typical response when doing select on discord user and ff14 character</h3>
                     <textarea class="snippet">
                         Result {
                             command: 'SELECT',

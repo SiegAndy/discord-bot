@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<TriggernometryExport Version="1">
+    <ExportedTrigger Enabled="true" Name="Player joins" Id="e008042a-55e2-47c2-bf81-19256ad5ee00" RegularExpression="00(::|:)(10|22)39:(?&lt;player&gt;[a-zA-Z-' ]{2,31})joins the party.">
+    <Actions>
+        <Action OrderNumber="1" JsonEndpointExpression="https://discord-ff14.herokuapp.com/auto" JsonPayloadExpression="{   &#xD;&#xA;    &quot;character&quot;: &quot;${player}&quot;, &#xD;&#xA;    &quot;combatZone&quot;: &quot;current raid tier&quot;, &#xD;&#xA;    &quot;echo&quot;: &quot;no&quot;, &#xD;&#xA;    &quot;metric&quot;:&quot;dps&quot;, &#xD;&#xA;    &quot;timeframe&quot;: &quot;today&quot;, &#xD;&#xA;    &quot;webhook&quot;: &quot;mywebhook&quot;&#xD;&#xA;}" LogLevel="-1" MouseX="" MouseY="" TextAuraFontSize="8.25" TextAuraFontName="Microsoft Sans Serif" ActionType="GenericJson">
+        <Condition Enabled="false" Grouping="Or" />
+        <Conditions />
+        </Action>
+        <Action OrderNumber="2" LogLevel="-1" MouseX="" MouseY="" UseTTSTextExpression="${player} joins party" UseTTSVolumeExpression="20" TextAuraFontSize="8.25" TextAuraFontName="Microsoft Sans Serif" ActionType="UseTTS">
+        <Condition Enabled="false" Grouping="Or" />
+        <Conditions />
+        </Action>
+    </Actions>
+    <Condition Enabled="false" Grouping="Or" />
+    <Conditions />
+    </ExportedTrigger>
+</TriggernometryExport>

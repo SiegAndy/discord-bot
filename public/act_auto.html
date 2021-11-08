@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="css/index.css" type="text/css">
+    <link rel="icon" href="image/favicon.ico" type="image/x-icon">
+    <script type="text/javascript" src="js/fflogs_attributes.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instruction for auto sending party member log info when joining</title>
+</head>
+<body background="image/discord_background.png" alink="#017bf5" vlink="#00A6FF">
+    <br>
+    <div class="title">
+        <h1>Instruction for auto sending party member log info when joining</h1>
+    </div>
+
+    <div id="beginning" class="div_command" style="margin-top: 0px;">
+        <h2>Step 1.1: You need to have
+            <a href="https://advancedcombattracker.com/download.php" target="_blank" class="link">Advanced Combat Tracker</a>
+            and
+            <a href="https://github.com/paissaheavyindustries/Triggernometry/releases"target="_blank" class="link">Triggernometry plugin</a>
+            installed to use this functionality!!</h2>
+        <h2>Step 1.2.1: Download the xml/trigger file and copy the content within.
+            <a href="xml/Player_join.xml" target="_blank" download="Player_joins.xml">(Click ME to Download)</a></h2>
+        </h2>
+        <h2>Step 1.2.2: Or just copy the xml/trigger file
+            <input type="button" value="Click ME to copy" id="xml" onclick="copytoclipboard('xml')">
+        </h2>
+        <textarea id="trigger" class="trigger" readonly><?xml version="1.0"?>
+<TriggernometryExport Version="1">
+    <ExportedTrigger Enabled="true" Name="Player joins" Id="e008042a-55e2-47c2-bf81-19256ad5ee00" RegularExpression="00(::|:)(10|22)39:(?&amp;lt;player&amp;gt;[a-zA-Z-' ]{2,31})joins the party.">
+    <Actions>
+        <Action OrderNumber="1" JsonEndpointExpression="https://discord-ff14.herokuapp.com/auto" LogLevel="-1" MouseX="" MouseY="" TextAuraFontSize="8.25" TextAuraFontName="Microsoft Sans Serif" ActionType="GenericJson">
+        <Condition Enabled="false" Grouping="Or" />
+        <Conditions />
+        </Action>
+        <Action OrderNumber="2" LogLevel="-1" MouseX="" MouseY="" UseTTSTextExpression="${player} joins party" UseTTSVolumeExpression="20" TextAuraFontSize="8.25" TextAuraFontName="Microsoft Sans Serif" ActionType="UseTTS">
+        <Condition Enabled="false" Grouping="Or" />
+        <Conditions />
+        </Action>
+    </Actions>
+    <Condition Enabled="false" Grouping="Or" />
+    <Conditions />
+    </ExportedTrigger>
+</TriggernometryExport></textarea>
+        <h2>Step 2-4: Open Plugins tabs -> Triggermometry -> Select a local folder where you want to store the trigger file</h2>
+        <h2>Step 5: Click the import button</h2>
+        <img src="image/step2-5.png" style="width: 50%; height: 30%; margin-left: 5%;"> 
+        <h2>Step 6: Paste xml we just copied to the textbox</h2>
+        <img src="image/step6.png" style="width: 60%; height: 40%; margin-left: 5%;"> 
+        <h2>Step 7: Open the xml file, copy the content within, and click Next</h2>
+        <h2>Step 8: You can edit the trigger file or just click 'Import' button</h2>
+        <img src="image/step8.png" style="width: 60%; height: 40%; margin-left: 5%;"> 
+        <h2>Step 9: Now you have the trigger installed</h2>
+        <img src="image/import.png" style="width: 50%; height: 30%; margin-left: 5%;">
+        <h2></h2>
+    </div>
+    <div id="payload" class="div_command" style="margin-top: 0px;">
+        <h2>Step 10: Choose parameters for fflogs queries and copy it:</h2>
+    </div>
+   <div class="grid-container" >
+        <div class="grid1">
+            <div class="grid2">
+                Combat Zone:<br>
+                <label class="options"><input type="radio" id="Current_raid_tier" name="Combat Zone" checked onclick="updatebox()"> Current Raid Tier</label>
+                <label class="options"><input type="radio" id="Ultimates" name="Combat Zone" onclick="updatebox()"> Ultimates</label>
+                <label class="options"><input type="radio" id="Both" name="Combat Zone" onclick="updatebox()"> Both</label>
+            </div>
+            <br>
+            <div class="grid2">
+                Filter metric:<br>
+                <label class="options"><input type="radio" id="dps" name="metric" checked onclick="updatebox()"> DPS</label>
+                <label class="options"><input type="radio" id="hps" name="metric" onclick="updatebox()"> HPS</label>
+                <label class="options"><input type="radio" id="playerspeed" name="metric" onclick="updatebox()"> Player Speed</label>
+            </div>
+        </div>
+        <div class="grid1" >
+            <div class="grid2">
+                Include Parse(s) with Echo:<br>
+                <label class="options"><input type="radio" id="without_echo" name="Echo" checked onclick="updatebox()"> No</label>
+                <label class="options"><input type="radio" id="with_echo" name="Echo" onclick="updatebox()"> Yes</label>
+            </div>
+            <br>
+            <div class="grid2">
+                Time Frame:<br>
+                <label class="options"><input type="radio" id="today" name="timeframe" checked onclick="updatebox()"> Today</label>
+                <label class="options"><input type="radio" id="historical" name="timeframe" onclick="updatebox()"> Historical</label>
+                
+            </div>
+        </div>
+        <div class="grid3">
+            Target Discord Hook URL:<br>
+            <label class="options"><input type="text" id="webhook" name="webhook" value="mywebhook" class="webhookurl"></label><br>
+            <label class="options"><input type="button" id="webhook_confirm" name="webhook_confirm" value="Confirm" onclick="updatebox()"></label>
+            <label class="options"><input type="button" id="webhook_reset" name="webhook_reset" value="Reset" onclick="reset_hook()"></label>
+        </div>
+        <div class="grid3">
+            Result JSON Payload: (paste it in 'Payload to send' field!)<br><br>
+            <textarea id="attributes" class="JSONPayload" readonly>{
+	"character": "${player}",
+	"combatZone": "both",
+	"echo": "no",
+	"metric": "dps",
+	"timeframe": "today",
+	"webhook": "mywebhook"
+}</textarea>
+        <input type="button" value="Click ME to copy" id="JSON" onclick="copytoclipboard('JSON')">
+        </div>
+   </div>
+   <div class="div_command" style="margin-top: 0px;">
+        <h2>Step 11-13: Open trigger file -> open the first action -> Paste the JSON from Step 10 to the field 'Payload to send'</h2>
+        <img src="image/step11-13.png" style="width: 80%; height: 40%; margin-left: 5%;">
+        <h2>Step 14: Save all the changes</h2>
+        <h2></h2><h2></h2><h2></h2>
+        <h2>Test command: </h2>
+        <h2 style="margin-left: 10%;">00::1039:T'aldarim AnnieSargatanas joins the party.</h2>
+        <h2>Expected output:</h2>
+        <img src="image/expected.png" style="width: 80%; height: 40%; margin-left: 5%;">
+    </div>
+    <div class="div_command" style="margin-top: 10%; margin-bottom: 10%; text-align: center;">
+        <h2 style="font-size: 80px;">End</h2>
+    </div>
+    
+</body>
+</html>

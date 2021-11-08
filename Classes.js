@@ -778,7 +778,7 @@ class FluentFFlogs{
           if(target_value > orginal_value){//if new one have higher rating return new one
             return elem;
           }
-          else if(target_value < orginal_value){//if new one have lower rating return new one
+          else if(target_value <= orginal_value){//if new one have lower rating return new one
             return acc;
           }
           else{console.log("Error in percentile field");}
@@ -804,7 +804,7 @@ class FluentFFlogs{
         if(Object.getOwnPropertyNames(result_array).length === 0){rejects("No fight record fit in this condition.");}
         if(Object.getOwnPropertyNames(result_array).length > 19){rejects("Error happened in highest_percentile, more porperties appeared.");}
         if(result_array.percentile === -1){rejects(`Character: ${result_array.characterName}, has no record fit in this fight: ${encounter.encounterName}, in this difficulty: ${difficulty}`);}
-        console.log(result_array)
+        // console.log(result_array)
         return resolve({
                   characterName: result_array.characterName, 
                   spec:result_array.spec, 
