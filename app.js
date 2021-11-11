@@ -33,7 +33,7 @@ app.post("/auto", (req, res)=>{
     // message.content = `~auto ${body.character} ${body.webhook}`;
     // // console.log(message)
     // act_auto(message);
-    test(body);
+    act_auto(body);
     res.status(200);
     res.send(`Player received: ${body.character}\nWebhook received: ${body.webhook}`);
 })
