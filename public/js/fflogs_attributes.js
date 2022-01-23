@@ -1,3 +1,8 @@
+const attributes = require("../../Classes.js")
+
+const server_list = attributes.server_list;
+const datacenter_list = attributes.data_centers;
+
 function copytoclipboard(input) {
     let copyText;
     if (input == 'xml'){
@@ -45,6 +50,8 @@ function updatebox(){
     check_update('today', 'timeframe', 'today');
     check_update('historical', 'timeframe', 'historical');
 
+    result['datacenter'] = document.getElementById('datacenter').value;
+    result['server'] = document.getElementById('server').value;
     result['webhook'] = document.getElementById('webhook').value;
 
     textbox.value = JSON.stringify(result, null, "\t");

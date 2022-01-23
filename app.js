@@ -26,16 +26,23 @@ app.get("/auto", (req, res)=>{
     res.sendFile(__dirname + '/public/act_auto.html');
 })
 
-app.post("/auto", async (req, res)=>{
+app.post("/auto", (req, res)=>{
     // console.log(req.body)
     body = req.body;
     // let message = {};
     // message.content = `~auto ${body.character} ${body.webhook}`;
     // // console.log(message)
     // act_auto(message);
-    await act_auto(body);
+    try {
+        result = act_auto(body);
+    } catch (error) {
+        res.status(406);
+        res.send(`Detail: ${error}`);
+    }
+
     res.status(200);
     res.send(`Player received: ${body.character}\nWebhook received: ${body.webhook}`);
+    
 })
 
 

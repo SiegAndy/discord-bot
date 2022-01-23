@@ -1,5 +1,5 @@
 require('dotenv').config(__dirname + '/.env');
-const{webhooks, server_list, zone_38, server_to_server_region, timeout_send, FluentFFlogs, zone_30, zone_32} = require('./Classes.js')
+const{webhooks, server_list, server_to_server_region, timeout_send, FluentFFlogs, zone_43, zone_44, zone_30, zone_32} = require('./Classes.js')
 const axios = require('axios');
 const { response } = require('express');
 
@@ -33,6 +33,7 @@ async function fetch_logs(name, server, zone=-1, encounterID=-1, partition=false
     }
 }
 
+
 // no return 
 async function act_auto(args){
     console.log(args);
@@ -64,24 +65,28 @@ async function act_auto(args){
             character[1] = character[1].slice(0, lname_server.length - player_server.length)
         }    
     }
-    if(player_server == undefined){throw 'Player server is not in database.'}
+    // if(player_server == undefined){throw 'Player server is not in database.'}
+    // TODO: check player server/datacenter field in the pass-in json
+    if(player_server == undefined){player_server = "Sargatanas"}
+
     character_name = character[0]+'%20'+character[1];
 
     let output_msgs = "```ml\n";
     let encounters, responses;
+
     if (combatZone[0]){
-        encounters = zone_38.encounters;
+        encounters = zone_44.encounters;
 
         output_msgs += `${character[0]} ${character[1]} ${player_server}\n\n     Encounter       Highest Rank        Job\n`;
         
         responses = null;
         for (encounter in encounters){
-            responses = await fetch_logs(character_name, player_server, zone_38.id
+            responses = await fetch_logs(character_name, player_server, zone_44.id
             , encounters[encounter].id, false, metric, timeframe, mode='parses');
             responses = responses.data
             
             if(echo){
-                let with_echo = await fetch_logs(character_name, player_server, zone_38.id
+                let with_echo = await fetch_logs(character_name, player_server, zone_44.id
                     , encounters[encounter].id, 13, metric, timeframe, mode='parses');
                 with_echo = with_echo.data
                 for(elem in with_echo){
@@ -92,7 +97,7 @@ async function act_auto(args){
             
             responses = new FluentFFlogs(responses).difficulty(101).highest_percentile()
             if(responses.difficulty === 101){
-                output_msgs += `${encounters[encounter].name}        ${Math.floor(responses.percentile)}             ${responses.spec}\n`;
+                output_msgs += `${encounters[encounter].name}        ${Math.floor(responses.percentile)}            ${responses.spec}\n`;
             }else{
                 output_msgs += `${encounters[encounter].name}       No savage combat data found\n`;
             }
@@ -102,18 +107,19 @@ async function act_auto(args){
     
     if (combatZone[1]){
         output_msgs += `\n\n         Ultimates               Cleared    Rank    Logs\n`
-        let ultimates_4 = zone_30.encounters;
-        for (ult in ultimates_4){
+        let ultimates_45 = zone_30.encounters;
+        for (ult in ultimates_45){
             responses = await fetch_logs(character_name, player_server, zone_30.id
-                , ultimates_4[ult].id, partition=false, metric, timeframe, mode='parses');
+                , ultimates_45[ult].id, partition=false, metric, timeframe, mode='parses');
             let nums = responses.data.length
             responses = new FluentFFlogs(responses.data).highest_percentile()
             if(nums !== 0){
-                output_msgs += `${ultimates_4[ult].name}       Yes       ${Math.floor(responses.percentile)}      ${nums}\n`; 
+                output_msgs += `${ultimates_45[ult].name}       Yes       ${Math.floor(responses.percentile)}      ${nums}\n`; 
             }else{
-                output_msgs += `${ultimates_4[ult].name}        No        0      0\n`;       
+                output_msgs += `${ultimates_45[ult].name}        No        0      0\n`;       
             }
         }
+
         responses = await fetch_logs(character_name, player_server, zone_32.id
             , zone_32.encounters[0].id, partition=false, metric='dps', timeframe='historical', mode='parses');
         let nums = responses.data.length

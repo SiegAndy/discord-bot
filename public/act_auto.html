@@ -89,6 +89,30 @@
                 
             </div>
         </div>
+        <div class="grid3" >
+            Your Character Server: <br>
+            <p style="font-size: 12pt; margin-left: 2%;">
+                Needed because when the player is the same server with you, their server name is omited on the FF14 client side.</p>
+            <div class="grid4"> 
+                <label for="datacenter" style="font-size: 80%;">Datacenter:   </label>
+                <select style="width: 30%; text-align: center;" name="Datacenter" id="datacenter" onchange="updatebox()">
+                    <option value="Aether">Aether</option>
+                    <option value="Chaos">Chaos</option>
+                    <option value="Crystal">Crystal</option>
+                    <option value="Elemental">Elemental</option>
+                    <option value="Gaia">Gaia</option>
+                    <option value="Light">Light</option>
+                    <option value="Mana">Mana</option>
+                    <option value="Primal">Primal</option>
+                </select>
+            </div>
+            <div class="grid4"> 
+                <label for="server" style="font-size: 80%;">Server: </label>
+                <select style="width: 30%; text-align: center;" name="Player Server" id="server" onchange="updatebox()">
+                    <option value="Aether">Aether</option>
+                </select>
+            </div>
+        </div>
         <div class="grid3">
             Target Discord Hook URL:<br>
             <label class="options"><input type="text" id="webhook" name="webhook" value="mywebhook" class="webhookurl"></label><br>

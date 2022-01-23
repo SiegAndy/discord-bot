@@ -52,65 +52,65 @@ const server_list = ["Adamantoise","Aegis","Alexander","Anima","Asura","Atomos"
                     ,"Ultros","Unicorn","Valefor","Yojimbo","Zalera"
                     ,"Zeromus","Zodiark","Spriggan","Twintania"]
 
-//4.0 Ultimates
+//Ultimates 4.0
 const zone_30 = {
   "id": 30,
-  "name": "Ultimates (Stormblood)",
-  "frozen": false,
-  "encounters": [
-    {
-      "id": 1047,
-      "name": "The Unending Coil of Bahamut"
+    "name": "Ultimates (Stormblood)",
+    "frozen": false,
+    "encounters": [
+      {
+        "id": 1047,
+        "name": "The Unending Coil of Bahamut"
+      },
+      {
+        "id": 1048,
+        "name": `    The Weapon's Refrain    `
+      }
+    ],
+    "brackets": {
+      "min": 5,
+      "max": 5.5,
+      "bucket": 0.1,
+      "type": "Patch"
     },
-    {
-      "id": 1048,
-      "name": `    The Weapon's Refrain    `
-    }
-  ],
-  "brackets": {
-    "min": 5,
-    "max": 5.5,
-    "bucket": 0.1,
-    "type": "Patch"
-  },
-  "partitions": [
-    {
-      "name": "Standard Comps",
-      "compact": "Standard",
-      "area": 1,
-      "default": true
-    },
-    {
-      "name": "Non-Standard Comps",
-      "compact": "Non-Standard",
-      "area": 1
-    },
-    {
-      "name": "Standard Comps",
-      "compact": "Standard",
-      "default": true,
-      "area": 2
-    },
-    {
-      "name": "Non-Standard Comps",
-      "compact": "Non-Standard",
-      "area": 2
-    },
-    {
-      "name": "Standard Comps",
-      "compact": "Standard",
-      "default": true,
-      "area": 3
-    },
-    {
-      "name": "Non-Standard Comps",
-      "compact": "Non-Standard",
-      "area": 3
-    }
-  ]
+    "partitions": [
+      {
+        "name": "Standard Comps",
+        "compact": "Standard",
+        "area": 1,
+        "default": true
+      },
+      {
+        "name": "Non-Standard Comps",
+        "compact": "Non-Standard",
+        "area": 1
+      },
+      {
+        "name": "Standard Comps",
+        "compact": "Standard",
+        "default": true,
+        "area": 2
+      },
+      {
+        "name": "Non-Standard Comps",
+        "compact": "Non-Standard",
+        "area": 2
+      },
+      {
+        "name": "Standard Comps",
+        "compact": "Standard",
+        "default": true,
+        "area": 3
+      },
+      {
+        "name": "Non-Standard Comps",
+        "compact": "Non-Standard",
+        "area": 3
+      }
+    ]
 }
 
-//5.0 Ultimates
+//Ultimates 5.0
 const zone_32 = {
   "id": 32,
   "name": "Ultimates",
@@ -118,7 +118,7 @@ const zone_32 = {
   "encounters": [
     {
       "id": 1050,
-      "name": `    The Epic of Alexander   `
+      "name": "    The Epic of Alexander   "
     }
   ],
   "brackets": {
@@ -209,8 +209,7 @@ const zone_32 = {
       "name": "Standard Comps (5.4)",
       "compact": "Standard (5.4)",
       "filtered_name": "5.4",
-      "area": 2,
-      "default": true
+      "area": 2
     },
     {
       "name": "Non-Standard Comps (5.4)",
@@ -221,8 +220,7 @@ const zone_32 = {
       "name": "Standard Comps (5.4)",
       "compact": "Standard (5.4)",
       "filtered_name": "5.4",
-      "area": 3,
-      "default": true
+      "area": 3
     },
     {
       "name": "Non-Standard Comps (5.4)",
@@ -245,7 +243,8 @@ const zone_32 = {
       "name": "Standard Comps (5.5)",
       "compact": "Standard (5.5)",
       "filtered_name": "5.5",
-      "area": 2
+      "area": 2,
+      "default": true
     },
     {
       "name": "Non-Standard Comps (5.5)",
@@ -256,11 +255,74 @@ const zone_32 = {
       "name": "Standard Comps (5.5)",
       "compact": "Standard (5.5)",
       "filtered_name": "5.5",
-      "area": 3
+      "area": 3,
+      "default": true
     },
     {
       "name": "Non-Standard Comps (5.5)",
       "compact": "Non-Standard (5.5)",
+      "area": 3
+    }
+  ]
+}
+
+//Ultimates 6.0
+const zone_43 = {
+  "id": 43,
+  "name": "Ultimates",
+  "frozen": false,
+  "encounters": [
+    {
+      "id": 1060,
+      "name": "The Unending Coil of Bahamut"
+    },
+    {
+      "id": 1061,
+      "name": "    The Weapon's Refrain    "
+    },
+    {
+      "id": 1062,
+      "name": "    The Epic of Alexander   "
+    }
+  ],
+  "brackets": {
+    "min": 6,
+    "max": 6,
+    "bucket": 0.1,
+    "type": "Patch"
+  },
+  "partitions": [
+    {
+      "name": "Standard Comps",
+      "compact": "Standard",
+      "area": 1,
+      "default": true
+    },
+    {
+      "name": "Non-Standard Comps",
+      "compact": "Non-Standard",
+      "area": 1
+    },
+    {
+      "name": "Standard Comps",
+      "compact": "Standard",
+      "default": true,
+      "area": 2
+    },
+    {
+      "name": "Non-Standard Comps",
+      "compact": "Non-Standard",
+      "area": 2
+    },
+    {
+      "name": "Standard Comps",
+      "compact": "Standard",
+      "default": true,
+      "area": 3
+    },
+    {
+      "name": "Non-Standard Comps",
+      "compact": "Non-Standard",
       "area": 3
     }
   ]
@@ -505,6 +567,75 @@ const zone_38 = {
       "area": 3
     }
   ]
+}
+
+//P1-P4
+const zone_44 = {"id": 44,
+"name": "Asphodelos",
+"frozen": false,
+"encounters": [
+  {
+    "id": 78,
+    "name": "   Erichthonios  "
+  },
+  {
+    "id": 79,
+    "name": "   Hippokampos   "
+  },
+  {
+    "id": 80,
+    "name": "     Phoinix     "
+  },
+  {
+    "id": 81,
+    "name": "     Hesperos    "
+  },
+  {
+    "id": 82,
+    "name": "    Hesperos II  "
+  }
+],
+"brackets": {
+  "min": 6,
+  "max": 6,
+  "bucket": 0.1,
+  "type": "Patch"
+},
+"partitions": [
+  {
+    "name": "Standard Comps",
+    "compact": "Standard",
+    "area": 1,
+    "default": true
+  },
+  {
+    "name": "Non-Standard Comps",
+    "compact": "Non-Standard",
+    "area": 1
+  },
+  {
+    "name": "Standard Comps",
+    "compact": "Standard",
+    "default": true,
+    "area": 2
+  },
+  {
+    "name": "Non-Standard Comps",
+    "compact": "Non-Standard",
+    "area": 2
+  },
+  {
+    "name": "Standard Comps",
+    "compact": "Standard",
+    "default": true,
+    "area": 3
+  },
+  {
+    "name": "Non-Standard Comps",
+    "compact": "Non-Standard",
+    "area": 3
+  }
+]
 }
 
 function server_to_server(server_name){// lowercased serve name into uppercased server name
@@ -932,5 +1063,7 @@ exports.data_centers = data_centers;
 exports.server_regions = server_regions;
 exports.zone_30 = zone_30;
 exports.zone_32 = zone_32;
+exports.zone_43 = zone_43;
 exports.zone_33 = zone_33;
 exports.zone_38 = zone_38;
+exports.zone_44 = zone_44;
