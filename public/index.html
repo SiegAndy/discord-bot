@@ -65,6 +65,37 @@
                 
             </div>
         </div>
+        <div class="grid3" >
+            Your Character Server: <br>
+            <p style="font-size: 75%; margin-left: 2%;">
+                (Needed because when the player is the same server with you, their server name is omited on the FF14 client side.)</p>
+            <div class="grid4"> 
+                <label for="datacenter" style="font-size: 80%;">Datacenter:   </label>
+                <select style="width: 40%; text-align: center;" name="Datacenter" id="datacenter" onchange="updatebox()">
+                    <option value="Aether">Aether</option>
+                    <!-- <option value="Chaos">Chaos</option>
+                    <option value="Crystal">Crystal</option>
+                    <option value="Elemental">Elemental</option>
+                    <option value="Gaia">Gaia</option>
+                    <option value="Light">Light</option>
+                    <option value="Mana">Mana</option>
+                    <option value="Primal">Primal</option> -->
+                </select>
+            </div>
+            <div class="grid4"> 
+                <label for="server" style="font-size: 80%;">Server: </label>
+                <select style="width: 40%; text-align: center;" name="Player Server" id="server" onchange="updatebox()">
+                    <option value="Adamantoise">Adamantoise</option>
+                    <option value="Cactuar">Cactuar</option>
+                    <option value="Faerie">Faerie</option>
+                    <option value="Gilgamesh">Gilgamesh</option>
+                    <option value="Jenova">Jenova</option>
+                    <option value="Midgardsormr">Midgardsormr</option>
+                    <option value="Sargatanas">Sargatanas</option>
+                    <option value="Siren">Siren</option>
+                </select>
+            </div>
+        </div>
         <div class="grid3">
             Target Discord Hook URL:<br>
             <label class="options"><input type="text" id="webhook" name="webhook" value="mywebhook" class="webhookurl"></label><br>
@@ -74,12 +105,14 @@
         <div class="grid3">
             Result JSON Payload: (paste it in 'Payload to send' field!)<br><br>
             <textarea id="attributes" class="JSONPayload" readonly>{
-	"character": "${player}",
-	"combatZone": "both",
-	"echo": "no",
-	"metric": "dps",
-	"timeframe": "today",
-	"webhook": "mywebhook"
+        "character": "${player}",
+        "combatZone": "both",
+        "echo": "no",
+        "metric": "dps",
+        "timeframe": "today",
+        "webhook": "mywebhook",
+        "datacenter": "Aether",
+        "server": "Adamantoise"
 }</textarea>
         <input type="button" value="Click ME to copy" id="JSON" onclick="copytoclipboard('JSON')">
         </div>

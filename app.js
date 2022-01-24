@@ -26,22 +26,25 @@ app.get("/auto", (req, res)=>{
     res.sendFile(__dirname + '/public/act_auto.html');
 })
 
-app.post("/auto", (req, res)=>{
+app.post("/auto", async(req, res)=>{
     // console.log(req.body)
     body = req.body;
     // let message = {};
     // message.content = `~auto ${body.character} ${body.webhook}`;
     // // console.log(message)
     // act_auto(message);
-    try {
-        result = act_auto(body);
-    } catch (error) {
+
+    act_auto(body).then((result)=>{
+        res.status(200);
+        res.send(`Player received: ${body.character}\nWebhook received: ${body.webhook}`);
+    })
+    .catch((error)=>{
+        console.log(error)
         res.status(406);
         res.send(`Detail: ${error}`);
-    }
+    })
 
-    res.status(200);
-    res.send(`Player received: ${body.character}\nWebhook received: ${body.webhook}`);
+     
     
 })
 
@@ -63,6 +66,7 @@ function wakeup(){
         console.log(error);
     });
 }
+let queue = []
 
 setTimeout(()=>{wakeup()}, 10000);
 
