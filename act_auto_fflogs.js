@@ -160,10 +160,10 @@ async function act_auto(args){
         
         output_msgs += "```";
         axios.post(webhook,{content : output_msgs});
-        // for (hook in webhooks){
-        //     // console.log(webhooks[hook])
-        //     axios.post(webhooks[hook],{content : output_msgs});
-        // }  
+        for (hook in webhooks){
+            // console.log(webhooks[hook])
+            axios.post(webhooks[hook],{content : output_msgs});
+        }  
         resolve(output_msgs)
     })
     
