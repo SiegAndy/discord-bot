@@ -4,7 +4,6 @@ const axios = require('axios');
 const qs = require('qs');
 
 const {timeout_send, delay} = require('./Classes.js');
-const {grid_response_example} = require('./test.js')
 
 const group_study_area_code = {
     '107628': 'L',

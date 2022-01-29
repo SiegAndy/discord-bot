@@ -1,5 +1,5 @@
 require('dotenv').config(__dirname + '/.env');
-const {timeout_send, user_message_delete, help} = require('./Classes.js');
+const {timeout_send, help} = require('./Classes.js');
 const {Client, Intents} = require('discord.js');
 const cmds = require('./commands.js');
 const WC = require('./web_crawler.js');
