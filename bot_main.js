@@ -80,7 +80,8 @@ client.on('message', message => {
 				case "test":
 					cmds.test(message);
 					break;
-	
+				case "book":
+					cmds.book(message);
 				// case "write": 
 				// 	cmds.write(message, client.msgs);
 				// 	break;
