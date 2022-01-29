@@ -9,6 +9,9 @@
   "keywords": [],
   "author": "SiegAndy#2157",
   "license": "ISC",
+  "engines": {
+    "node": "17.x"
+  },
   "dependencies": {
     "@discordjs/opus": "^0.3.3",
     "@discordjs/uws": "^10.149.0",
