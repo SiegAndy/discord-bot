@@ -670,8 +670,11 @@ function server_to_data_center(server_name){
 }
 
 function timeout_send(message, content, deletetime = 60000){
-    console.log(content)
-    setTimeout(function(){message.channel.send(content).then(d_msg => {d_msg.delete({ timeout: deletetime });});}, 10);
+    // console.log(content)
+    if (deletetime == -1)
+        setTimeout(() => {message.channel.send(content);}, 10);
+    else
+    setTimeout(() => {message.channel.send(content).then(d_msg => {d_msg.delete({ timeout: deletetime });});}, 10);
 }
 
 function user_message_delete (message) {

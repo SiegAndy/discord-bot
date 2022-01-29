@@ -3,6 +3,7 @@ const axios = require('axios');
 
 const qs = require('qs');
 
+const {timeout_send} = require('./Classes.js');
 const {grid_response_example} = require('./test.js')
 
 const group_study_area_code = {
@@ -558,7 +559,7 @@ async function reserve(message){
 		let book_result = await book_slots(
 			'fname', 
 			'lname', 
-			'textreceivier3@gmail.com', 
+			'zc4706186250@gmail.com', 
 			add_second_result.session, 
 			add_second_result.bookings[0].id, 
 			add_second_result.bookings[0].eid,
@@ -568,15 +569,20 @@ async function reserve(message){
 		)
 		
 		// console.log(book_result)
+		output_msg = "```ml\n"
+
 		if (book_result.bookId != undefined){
 			booked_room = group_study_area_code[add_second_result.bookings[0].eid]
-			console.log(`Successfully booked room '${booked_room}' from ${add_second_result.bookings[0].start} to ${add_second_result.bookings[0].end}`)
+			output_msg += `\nbookId: {${book_result.bookId}}.\nSuccessfully booked room '${booked_room}' from ${add_second_result.bookings[0].start} to ${add_second_result.bookings[0].end}`
+			output_msg += `To cancel this booking visit:\nhttps://libcal.library.umass.edu/equipment/cancel?id=${book_result.bookId}`
 		}
 		else{
 			console.log(book_result)
 			console.log(`no available room for interval from ${cur_start} to ${cur_end}`)
-			continue
 		}
+		output_msgs += "```";
+		timeout_send(message, output_msgs, -1)
+
 	}
 	// console.log(result_slot)
 
@@ -584,7 +590,7 @@ async function reserve(message){
 
 }
 
-// message = {content: '~book 14    Tue&Thur  10  2  1 '}
+// message = {content: '~book 12    Tue&Thur  1  2  1 '}
 // reserve(message)
 
 // let a = 107645
