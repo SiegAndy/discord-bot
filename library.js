@@ -3,8 +3,7 @@ const axios = require('axios');
 
 const qs = require('qs');
 
-const {timeout_send} = require('./Classes.js');
-const {grid_response_example} = require('./test.js')
+const {timeout_send, delay} = require('./Classes.js');
 
 const group_study_area_code = {
     '107628': 'L',
@@ -453,43 +452,53 @@ async function reserve(message){
 		return undefined
 	}
 
+	output_msg = "```ml\n"
+
 	try {
 		// message = {content: '~book 14 Tue&Thur 5 2'}
-		message = message.content.split(' ').slice(1).filter(n=>n)
-		hours = parseInt(message[0])
-		days = message[1].split('&')
+		let contents = message.content.split(' ').slice(1).filter(n=>n)
+		hours = parseInt(contents[0])
+		days = contents[1].split('&')
 		for (day in days){
 			days[day] = DaytoNum[days[day]]
 		}
 
 		num_of_book = days.length
+
 		if (num_of_book <= 0){
-			console.log('Invalid date')
+			output_msg += `Invalid date: ${message.content}`
+			output_msg += "\n```";
+			timeout_send(message, output_msg, 1000, -1)
 			return
 		}
 		time_interval = 1
 		reversed = false
-		if (message.length == 2){
+
+		if (contents.length == 2){
 			// continue
 		}
-		else if (message.length == 3){
-			num_of_book = parseInt(message[2])
+		else if (contents.length == 3){
+			num_of_book = parseInt(contents[2])
 		}
-		else if (message.length == 4){
-			num_of_book = parseInt(message[2])
-			time_interval = parseInt(message[3])
+		else if (contents.length == 4){
+			num_of_book = parseInt(contents[2])
+			time_interval = parseInt(contents[3])
 		}
-		else if (message.length == 5){
-			num_of_book = parseInt(message[2])
-			time_interval = parseInt(message[3])
-			reversed = parseInt(message[4])
+		else if (contents.length == 5){
+			num_of_book = parseInt(contents[2])
+			time_interval = parseInt(contents[3])
+			reversed = parseInt(contents[4])
 		}
 		else{
-			console.log('Invalid command')
+			output_msg += `Invalid command: ${message.content}`
+			output_msg += "\n```";
+			timeout_send(message, output_msg, 1000, -1)
 			return
 		}
 	} catch (error) {
-		console.log('Invalid command')
+		output_msg += `Invalid command: ${message.content}`
+		output_msg += "\n```";
+		timeout_send(message, output_msg, 1000, -1)
 		return
 	}
 	
@@ -526,7 +535,6 @@ async function reserve(message){
 			}
 		}
 		
-
 		if (result_slot == undefined){
 			console.log(`no available room for interval from ${cur_start} to ${cur_end}`)
 			continue
@@ -568,34 +576,30 @@ async function reserve(message){
 			add_second_result.bookings[0].checksum,
 		)
 		
-		// console.log(book_result)
-		output_msg = "```ml\n"
 
 		if (book_result.bookId != undefined){
 			booked_room = group_study_area_code[add_second_result.bookings[0].eid]
-			output_msg += `\nbookId: {${book_result.bookId}}.\nSuccessfully booked room '${booked_room}' from ${add_second_result.bookings[0].start} to ${add_second_result.bookings[0].end}`
-			output_msg += `To cancel this booking visit:\nhttps://libcal.library.umass.edu/equipment/cancel?id=${book_result.bookId}`
+			output_msg += `\nSuccessfully booked room '${booked_room}' from ${add_second_result.bookings[0].start} to ${add_second_result.bookings[0].end}`
+			output_msg += `\nbookId: {${book_result.bookId}}, to cancel this booking visit:\nhttps://libcal.library.umass.edu/equipment/cancel?id=${book_result.bookId}`
+			console.log(`\nbookId: {${book_result.bookId}}, to cancel this booking visit:\nhttps://libcal.library.umass.edu/equipment/cancel?id=${book_result.bookId}`)
 		}
 		else{
 			console.log(book_result)
-			console.log(`no available room for interval from ${cur_start} to ${cur_end}`)
+			console.log(`\nno available room for interval from ${cur_start} to ${cur_end}`)
+			output_msg += `\nno available room for interval from ${cur_start} to ${cur_end}`
 		}
-		output_msgs += "```";
-		timeout_send(message, output_msgs, -1)
-
+		
+		await delay(5000)
 	}
+	output_msg += "\n```";
+
+	timeout_send(message, output_msg, 10, -1)
 	// console.log(result_slot)
-
 	// console.log(reserve_days)
-
 }
 
-// message = {content: '~book 12    Tue&Thur  1  2  1 '}
+// message = {content: '~book 12    Tue&Thur  2  2  1 '}
 // reserve(message)
-
-// let a = 107645
-// console.log(group_study_area_code[a])
-// console.log(nextDayAndTime(2, 19, 0)) 
 // message = message.content.split(' ').slice(1).filter(n=>n)
 // console.log(message)
 exports.reserve = reserve;
