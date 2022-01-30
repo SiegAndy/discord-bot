@@ -59,19 +59,19 @@ async function act_auto(args){
         let metric = args['metric'];
         let timeframe = args['timeframe'];
         let webhook = args['webhook']
-        let character = args['character'].split(' ')
+        let character = args['character'].split(' ').filter(n=>n)
         let lname_server = character[1]; //AnnieSargatanas
         
         let player_server = undefined
         if(args['server']){
             player_server = args['server']
-            character[1] = character[1].slice(0, lname_server.length - player_server.length)
+            character[1] = character[1].slice(0, lname_server.length - player_server.length).filter(n=>n)
         }
         else{
             for (server in server_list){
                 if(lname_server.includes(server_list[server])){
                     player_server = server_list[server];
-                    character[1] = character[1].slice(0, lname_server.length - player_server.length)
+                    character[1] = character[1].slice(0, lname_server.length - player_server.length).filter(n=>n)
                 }    
             }
         }
@@ -157,14 +157,20 @@ async function act_auto(args){
             reject('Error when fetching logs')
         }
         
+        try {
+            output_msgs += "```";
+            axios.post(webhook,{content : output_msgs});
+            for (hook in webhooks){
+                // console.log(webhooks[hook])
+                axios.post(webhooks[hook],{content : output_msgs});
+            }  
+            resolve(output_msgs)
+        } catch (error) {
+            console.log(`Error status: ${error.response.status}\nError message: ${error.response.statusText}`)
+            console.log(`Message content: ${error.response.config}`)
+            reject('Unable do POST operation to webhook!')
+        }
         
-        output_msgs += "```";
-        axios.post(webhook,{content : output_msgs});
-        for (hook in webhooks){
-            // console.log(webhooks[hook])
-            axios.post(webhooks[hook],{content : output_msgs});
-        }  
-        resolve(output_msgs)
     })
     
 }

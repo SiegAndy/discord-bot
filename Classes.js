@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 const { promisify } = require('util');
 const sleep = promisify(setTimeout);
 
-const webhooks = [ 'https://discord.com/api/webhooks/861092339198722058/zq9CrwrbQPhsB8y-hXQthDq7AWI_F9w8ToRGboCfQSZJvKk5E4shZ27IJ5dQJBtqr18u',
+const webhooks = [ 'https://discord.com/api/webhooks/937193811283673149/rfhzlvzYjx4ISQV63zdUtl6TPGa_KOD6gLLmqYbvhqQlm87BBR1QYafA_fccpWGBSJgq',
                   //'https://discord.com/api/webhooks/860982441521709066/xSqqdfqgIG0r_Ir-ghyehMiEYBvWHmO8qoBA-iIbHnKtudKjB0_JB_VWqQcsEzed0AhH',
                 ]
 const roleNames = {max: ['GM', 'Administrator',], second: ['GM', 'Administrator','Refugee','Tester',]};
