@@ -1,9 +1,9 @@
-// const crawler = require("./web_crawler.js");
-// const fs = require("fs");
-const loadstone = require("./loadstone.js");
-const fflogs = require("./fflogs_analysis.js");
-const {Database} = require('./Database/Database_postgre.js');
-const {ff14,user,string_is_int,output_json,timeout_send,server_to_server,server_to_server_region,server_to_data_center} = require('./Classes.js');
+const {loadstone} = require("./loadstone.js");
+const {fflogs} = require("./fflogs_analysis.js");
+const {Database} = require('../database/database_postgre.js');
+const{timeout_send, server_to_server_region, server_to_data_center} = require('../util/funcs');
+// const{ff14, user} = require('../util/classes');
+
 const Discord = require('discord.js');
 
 

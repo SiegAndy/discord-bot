@@ -1,7 +1,7 @@
 {
   "name": "discord-bot",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "src/web/app.js",
   "scripts": {
     "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -25,6 +25,7 @@
     "mysql": "^2.18.1",
     "naudiodon": "^2.2.4",
     "nodemon": "^2.0.15",
+    "path": "^0.12.7",
     "pg": "^8.6.0",
     "qs": "^6.10.3",
     "sqlite3": "^4.2.0",

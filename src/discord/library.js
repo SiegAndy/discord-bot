@@ -1,36 +1,9 @@
+const {timeout_send, delay} = require('../util/funcs');
+const {group_study_area_code, header_referer} = require('../util/variables');
 
 const axios = require('axios');
-
 const qs = require('qs');
 
-const {timeout_send, delay} = require('./Classes.js');
-
-const group_study_area_code = {
-    '107628': 'L',
-    '107629': 'M',
-    '107630': 'N',
-    '107631': 'O',
-    '107632': 'P',
-    '107633': 'Q',
-    '107635': 'R',
-    '107636': 'S',
-    '107638': 'T',
-    '107640': 'U',
-    '107642': 'V',
-    '107644': 'W',
-    '107645': 'X',
-    '107646': 'Y',
-    '107647': 'Z',
-}
-
-const header_referer = {
-    'headers':{
-		'Content-Type': 'application/x-www-form-urlencoded',
-		'Connection': 'keep-alive',
-		'origin': 'https://libcal.library.umass.edu',
-    	'referer': 'https://libcal.library.umass.edu/spaces?lid=11076&gid=28495&c=0'
-	}
-}
 
 const lib_route = 'https://libcal.library.umass.edu'
 
@@ -82,52 +55,6 @@ const add_post_format = (elementID, add_start, checksum, start, end) => {
 }
 
 
-const add_response_example = {
-    "session": 12239928,
-    "bookings": [
-      {
-        "id": 20604948,
-        "eid": 107629,
-        "seat_id": 0,
-        "gid": 28495,
-        "lid": 11076,
-        "start": "2022-01-28 13:00:00",
-        "end": "2022-01-28 14:00:00",
-        "checksum": "fffd692eab9a80324c0bdecdbe024796",
-        "options": [
-          "2022-01-28 14:00:00",
-          "2022-01-28 15:00:00"
-        ],
-        "optionSelected": 0,
-        "optionChecksums": [
-          "44dba93d1ef61e54816df67382416209",
-          "2a91bd3bb93c505f9ab12add98efd3d2"
-        ],
-        "cost": 0
-      }
-    ],
-    "gridUpdateData": {
-      "itemId": 107629,
-      "dateStart": "2022-01-28 08:00:00",
-      "dateEnd": "2022-01-28 17:00:00",
-      "gridData": [
-        {
-          "start": "2022-01-28 13:00:00",
-          "className": "s-lc-eq-pending"
-        },
-        {
-          "start": "2022-01-28 15:00:00",
-          "className": "s-lc-eq-checkout"
-        },
-        {
-          "start": "2022-01-28 16:00:00",
-          "className": "s-lc-eq-checkout"
-        }
-      ]
-    },
-    "limitIssues": null
-  }
-
 /*
 'update[id]': 20603977 = 'bookings[0][id]': 20603977
 'update[checksum]': '44dba93d1ef61e54816df67382416209',
@@ -170,57 +97,9 @@ const add2_post_format = (
     })
 }
 
-const add2_response_example = {
-    "session": 12239928,
-    "bookings": [
-      {
-        "id": 20604948,
-        "eid": 107629,
-        "seat_id": 0,
-        "gid": 28495,
-        "lid": 11076,
-        "start": "2022-01-28 13:00:00",
-        "end": "2022-01-28 15:00:00",
-        "checksum": "6db6a41a91156c3bc276a637a5983510",
-        "options": [
-          "2022-01-28 14:00:00",
-          "2022-01-28 15:00:00"
-        ],
-        "optionSelected": 1,
-        "optionChecksums": [
-          "44dba93d1ef61e54816df67382416209",
-          "2a91bd3bb93c505f9ab12add98efd3d2"
-        ],
-        "cost": 0
-      }
-    ],
-    "gridUpdateData": {
-      "itemId": 107629,
-      "dateStart": "2022-01-28 08:00:00",
-      "dateEnd": "2022-01-28 17:00:00",
-      "gridData": [
-        {
-          "start": "2022-01-28 13:00:00",
-          "className": "s-lc-eq-pending"
-        },
-        {
-          "start": "2022-01-28 14:00:00",
-          "className": "s-lc-eq-pending"
-        },
-        {
-          "start": "2022-01-28 15:00:00",
-          "className": "s-lc-eq-checkout"
-        },
-        {
-          "start": "2022-01-28 16:00:00",
-          "className": "s-lc-eq-checkout"
-        }
-      ]
-    },
-    "limitIssues": null
-}
 
 const book_route = lib_route + '/ajax/space/book'
+
 
 /*
 formData[fname]: Chang
@@ -267,20 +146,6 @@ const book_post_format = (
     })
 }
 
-const book_sucess_example = {
-    "bookId": "cs_pqXyawIe",
-    "html": "\n\n    <div class=\"s-lc-eq-book-summary\">\n                    <p>The following reservations were made:</p>\n                \n    <p>\n                \n        W. E. B. Du Bois Library\n                 >> Learning Commons (Lower Level)\n                        <br>\n        <strong>Group Study Space M</strong>:\n        1:00pm - 3:00pm, Friday, January 28, 2022\n\n                    </p>\n                            <p>\n                    You will receive an email confirmation at zc470618625@gmail.com. Please check your spam folder or contact the library with any questions.\n                </p>\n                        </div>\n\n    \n            <div id=\"s-lc-eq-success-buttons\" class=\"margin-top-xlg\">\n            \n            <a href=\"/spaces?lid=11076&amp;gid=28495&amp;c=0\" class=\"btn btn-primary\">\n                Make Another Booking\n            </a>\n\n                    </div>\n    ",
-    "bookingCost": 0
-}
-
-const book_fail_example = {
-    "success": false,
-    "code": 99,
-    "error": "<p>Group Study Space M: Sorry, this exceeds the limit per day in this category</p>"
-}
-
-
-
 
 async function get_slots(start, end){
 	// return grid_response_example()
@@ -294,6 +159,7 @@ async function get_slots(start, end){
 	})
 }
 
+
 async function add_slot(elementID, add_start, checksum, start, end){
 	return await axios.post(add_route, add_post_format(elementID, add_start, checksum, start, end), header_referer)
 	.then((res) => {
@@ -304,6 +170,7 @@ async function add_slot(elementID, add_start, checksum, start, end){
 		return []
 	})
 }
+
 
 async function add_second_slot(
 	id, 
@@ -338,6 +205,7 @@ async function add_second_slot(
 	})
 }
 
+
 async function book_slots(
 	fname, 
     lname, 
@@ -370,9 +238,8 @@ async function book_slots(
 }
 
 
-// test()
-// day: 0=Sunday, 1=Monday...4=Thursday...
 function nextDayAndTime(dayOfWeek, hour, numOfWeek=0, interval=1) {
+// day: 0=Sunday, 1=Monday...4=Thursday...
 	const helper = (result) => {
 		month = 0
 		if (result.getMonth() < 10) 
@@ -422,7 +289,7 @@ function nextDayAndTime(dayOfWeek, hour, numOfWeek=0, interval=1) {
 		start_time: helper2(start_time),
 		end_time:  helper2(start_time, interval),
 	}
-  }
+}
 
 const DaytoNum = {
 	'Mon': 1,
@@ -431,6 +298,8 @@ const DaytoNum = {
 	'Thur': 4,
 	'Fri': 5,
 }
+
+
 /*
 ~book 	14:00 			Tue&Thur 						5 								2 							1
 ~book {time start} {which weekday} {how many books needed=1|len(whichweekday)} {time interval(hrs)=1} {0:(L->Z) 1: reversed(Z->L)}
@@ -514,94 +383,96 @@ async function reserve(message){
 		++numOfWeek;
 	}
 
-	for(index in reserve_days){
-		let result_slot = undefined
-
-		let cur_day = reserve_days[index]
-		let cur_start = [cur_day.start,cur_day.start_time].join(' ')
-		let cur_end = [cur_day.start,cur_day.end_time].join(' ')
-
-		let cur_slots = await get_slots(cur_day.start, cur_day.end)
-		// console.log(cur_slots)
-		if (reversed){
-			for(let i=cur_slots.length-(time_interval); i>=0; --i){
-				result_slot = check_availability(cur_slots, i, cur_start, cur_end)
-				if (result_slot) break
+	try {
+		for(index in reserve_days){
+		
+			let result_slot = undefined
+	
+			let cur_day = reserve_days[index]
+			let cur_start = [cur_day.start,cur_day.start_time].join(' ')
+			let cur_end = [cur_day.start,cur_day.end_time].join(' ')
+	
+			let cur_slots = await get_slots(cur_day.start, cur_day.end)
+			// console.log(cur_slots)
+			if (reversed){
+				for(let i=cur_slots.length-(time_interval); i>=0; --i){
+					result_slot = check_availability(cur_slots, i, cur_start, cur_end)
+					if (result_slot) break
+				}
+			} else{
+				for(let i=0; i<cur_slots.length-(time_interval-1); ++i){
+					result_slot = check_availability(cur_slots, i, cur_start, cur_end)
+					if (result_slot) break
+				}
 			}
-		} else{
-			for(let i=0; i<cur_slots.length-(time_interval-1); ++i){
-				result_slot = check_availability(cur_slots, i, cur_start, cur_end)
-				if (result_slot) break
+			
+			if (result_slot == undefined){
+				console.log(`\nno available room for interval from ${cur_start} to ${cur_end}\n`)
+				continue
 			}
+	
+			// now we find the slot we want to book
+			let add_result = await add_slot(
+				result_slot.itemId, 
+				result_slot.start, 
+				result_slot.checksum, 
+				cur_day.start, 
+				cur_day.end
+			)
+			// console.log(add_result)
+	
+			let add_second_result = await add_second_slot(
+				add_result.bookings[0].id, 
+				add_result.bookings[0].optionChecksums[1], 
+				add_result.bookings[0].options[1], 
+				cur_day.start, 
+				cur_day.end, 
+				add_result.session, 
+				add_result.bookings[0].eid,
+				add_result.bookings[0].start,
+				add_result.bookings[0].end,
+				add_result.bookings[0].checksum,
+			)
+			// console.log(add_second_result)
+	
+			let book_result = await book_slots(
+				'fname', 
+				'lname', 
+				'zc4706186250@gmail.com', 
+				add_second_result.session, 
+				add_second_result.bookings[0].id, 
+				add_second_result.bookings[0].eid,
+				add_second_result.bookings[0].start,
+				add_second_result.bookings[0].end,
+				add_second_result.bookings[0].checksum,
+			)
+			
+	
+			if (book_result.bookId != undefined){
+				booked_room = group_study_area_code[add_second_result.bookings[0].eid]
+				output_msg += `\nSuccessfully booked room '${booked_room}' from ${add_second_result.bookings[0].start} to ${add_second_result.bookings[0].end}\n`
+				output_msg += `bookId: {${book_result.bookId}}, to cancel this booking visit:\nhttps://libcal.library.umass.edu/equipment/cancel?id=${book_result.bookId}\n`
+				console.log(`bookId: {${book_result.bookId}}, to cancel this booking visit:\nhttps://libcal.library.umass.edu/equipment/cancel?id=${book_result.bookId}\n`)
+			}
+			else{
+				console.log(book_result)
+				console.log(`\nno available room for interval from ${cur_start} to ${cur_end}\n`)
+				output_msg += `\nno available room for interval from ${cur_start} to ${cur_end}\n`
+				output_msg += `Detail: ${book_result.error}\n`
+			}
+			
+			await delay(5000)
 		}
-		
-		if (result_slot == undefined){
-			console.log(`no available room for interval from ${cur_start} to ${cur_end}`)
-			continue
-		}
-
-		// now we find the slot we want to book
-		let add_result = await add_slot(
-			result_slot.itemId, 
-			result_slot.start, 
-			result_slot.checksum, 
-			cur_day.start, 
-			cur_day.end
-		)
-		// console.log(add_result)
-
-		let add_second_result = await add_second_slot(
-			add_result.bookings[0].id, 
-			add_result.bookings[0].optionChecksums[1], 
-			add_result.bookings[0].options[1], 
-			cur_day.start, 
-			cur_day.end, 
-			add_result.session, 
-			add_result.bookings[0].eid,
-			add_result.bookings[0].start,
-			add_result.bookings[0].end,
-			add_result.bookings[0].checksum,
-		)
-		// console.log(add_second_result)
-
-		let book_result = await book_slots(
-			'fname', 
-			'lname', 
-			'zc4706186250@gmail.com', 
-			add_second_result.session, 
-			add_second_result.bookings[0].id, 
-			add_second_result.bookings[0].eid,
-			add_second_result.bookings[0].start,
-			add_second_result.bookings[0].end,
-			add_second_result.bookings[0].checksum,
-		)
-		
-
-		if (book_result.bookId != undefined){
-			booked_room = group_study_area_code[add_second_result.bookings[0].eid]
-			output_msg += `\nSuccessfully booked room '${booked_room}' from ${add_second_result.bookings[0].start} to ${add_second_result.bookings[0].end}`
-			output_msg += `\nbookId: {${book_result.bookId}}, to cancel this booking visit:\nhttps://libcal.library.umass.edu/equipment/cancel?id=${book_result.bookId}`
-			console.log(`\nbookId: {${book_result.bookId}}, to cancel this booking visit:\nhttps://libcal.library.umass.edu/equipment/cancel?id=${book_result.bookId}`)
-		}
-		else{
-			console.log(book_result)
-			console.log(`\nno available room for interval from ${cur_start} to ${cur_end}`)
-			output_msg += `\nno available room for interval from ${cur_start} to ${cur_end}`
-		}
-		
-		await delay(5000)
+		output_msg += "\n```";
+	
+		timeout_send(message, output_msg, 1000, -1)
+	} catch (error) {
+		console.log(error.data)
 	}
-	output_msg += "\n```";
-
-
-	timeout_send(message, output_msg, 1000, -1)
 
 	// console.log(result_slot)
 	// console.log(reserve_days)
 }
 
-// message = {content: '~book 12    Tue&Thur  2  2  1 '}
-// reserve(message)
-// message = message.content.split(' ').slice(1).filter(n=>n)
-// console.log(message)
+
 exports.reserve = reserve;

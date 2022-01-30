@@ -1,7 +1,8 @@
-require('dotenv').config(__dirname + '/.env');
-const{webhooks, server_list, server_to_server_region, timeout_send, FluentFFlogs, zone_43, zone_44, zone_30, zone_32} = require('./Classes.js')
+const{FluentFFlogs} = require('../util/classes')
+const{server_to_server_region, timeout_send} = require('../util/funcs')
+const{FFLOGS_API_KEY, WEBHOOK, server_list, zone_43, zone_44, zone_30, zone_32} = require('../util/variables')
+
 const axios = require('axios');
-const { response } = require('express');
 
 // to use this function, need to open act.
 
@@ -23,7 +24,7 @@ async function fetch_logs(name, server, zone=-1, encounterID=-1, partition=false
         if(partition){
             URL += `partition=${partition}`;
         }
-        URL += `&timeframe=${timeframe}&api_key=${process.env.FFLOGS_API_KEY}`;
+        URL += `&timeframe=${timeframe}&api_key=${FFLOGS_API_KEY}`;
         try {
             // console.log(URL);
             resolve(await axios.get(URL));
@@ -160,10 +161,9 @@ async function act_auto(args){
         try {
             output_msgs += "```";
             axios.post(webhook,{content : output_msgs});
-            for (hook in webhooks){
-                // console.log(webhooks[hook])
-                axios.post(webhooks[hook],{content : output_msgs});
-            }  
+            if (WEBHOOK){
+                axios.post(WEBHOOK,{content : output_msgs});
+            }
             resolve(output_msgs)
         } catch (error) {
             console.log(`Error status: ${error.response.status}\nError message: ${error.response.statusText}`)
