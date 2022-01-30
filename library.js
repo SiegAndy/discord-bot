@@ -593,7 +593,9 @@ async function reserve(message){
 	}
 	output_msg += "\n```";
 
-	timeout_send(message, output_msg, 10, -1)
+
+	timeout_send(message, output_msg, 1000, -1)
+
 	// console.log(result_slot)
 	// console.log(reserve_days)
 }

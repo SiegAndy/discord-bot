@@ -1,12 +1,12 @@
 require('dotenv').config(__dirname + '/.env');
-const {timeout_send, user_message_delete, help} = require('./Classes.js');
-const Discord = require('discord.js');
+const {timeout_send, help} = require('./Classes.js');
+const {Client, Intents} = require('discord.js');
 const cmds = require('./commands.js');
 const WC = require('./web_crawler.js');
 const hello = 'hello'
-const client = new Discord.Client();
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 //client.msgs = require("./msgs.json"); using json for data storage, replacing by PostgreSQL
-const prefix = "~";
+const prefix = "!";
 
 client.on('ready', () => {
 	console.log('Ready!');
@@ -82,6 +82,7 @@ client.on('message', message => {
 					break;
 				case "book":
 					cmds.book(message);
+					break;
 				// case "write": 
 				// 	cmds.write(message, client.msgs);
 				// 	break;

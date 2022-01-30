@@ -63,10 +63,9 @@ function wakeup(){
     })
     .catch(function (error) {
         console.log(`Error happened when sending Hello message to wakeup page at ${time}`);
-        console.log(error);
+        // console.log(error);
     });
 }
-let queue = []
 
 setTimeout(()=>{wakeup()}, 10000);
 

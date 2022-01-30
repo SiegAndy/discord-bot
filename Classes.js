@@ -669,12 +669,22 @@ function server_to_data_center(server_name){
     return;
 }
 
-function timeout_send(message, content, deletetime = 60000){
+function delay(msec=60000){
+    return new Promise(resolve => setTimeout(resolve, msec));
+}
+
+function timeout_send(message, content, delaytime=10, deletetime = 60000){
     // console.log(content)
-    if (deletetime == -1)
-        setTimeout(() => {message.channel.send(content);}, 10);
-    else
-    setTimeout(() => {message.channel.send(content).then(d_msg => {d_msg.delete({ timeout: deletetime });});}, 10);
+    if (message.channel == undefined){
+        setTimeout(() => {console.log(content);}, delaytime);
+        return
+    }
+    if (deletetime == -1){
+        setTimeout(() => {message.channel.send(content);}, delaytime);
+    }
+    else{
+        setTimeout(() => {message.channel.send(content).then(d_msg => {d_msg.delete({ timeout: deletetime });});}, delaytime);
+    }
 }
 
 function user_message_delete (message) {
@@ -693,7 +703,7 @@ function output_json(message, client_msgs, output_msgs){
 
 function help(message){
     //timeout_send(message, "Incorrect format!");
-    timeout_send(message, new Discord.MessageEmbed()
+    timeout_send(message, {embeds: [new Discord.MessageEmbed()
                                         .setColor('#99d6ff')
                                         .setTimestamp()
                                         .addFields(
@@ -704,7 +714,9 @@ function help(message){
                                         { name: "2): Use command '~find character_firstName character_lastName [server_name] / lodestone  ' to get ff14 character card."
                                         , value:"		E.g. ~find T'aldarim Annie Sargatanas, or ~find 25526101. Server_name is omitable only if no character with duplicate name in other server." },
                                         { name: "3): Use command '~whoami' to shows discord user card."
-                                        , value:"       if linked with ff14 character, ff14 character card would also show up." },));
+                                        , value:"       if linked with ff14 character, ff14 character card would also show up." },)]}
+                                    
+                                        );
         // message.channel.send("1): Use command '~Write [content]' to preset message.").then(d_msg => {d_msg.delete({ timeout: 60000 });});
 		// message.channel.send("2): Use command '~Get [username]' to read preset message.").then(d_msg => {d_msg.delete({ timeout: 60000 });});
 		// message.channel.send("3): Use command '~fflogs character_firstName character_lastName [combatName] [server_name] ' to get highest rank fflogs.").then(d_msg => {d_msg.delete({ timeout: 60000 });});
@@ -1051,6 +1063,7 @@ exports.server_to_server_region = server_to_server_region;
 exports.server_to_data_center = server_to_data_center;
 exports.string_is_int=string_is_int;
 exports.output_json = output_json;
+exports.delay = delay;
 exports.timeout_send = timeout_send;
 exports.user_message_delete = user_message_delete;
 exports.help = help;
