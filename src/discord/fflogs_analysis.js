@@ -1,7 +1,9 @@
-require('dotenv').config({path: "C:/Users/zc470/Desktop/Extra/Discord-bot/.env"});
-const {FluentFFlogs, server_list, timeout_send, server_to_server_region, zone_38, webhooks} = require('./Classes.js');
-const axios = require('axios');
+const{FluentFFlogs} = require('../util/classes')
+const{server_to_server_region, timeout_send} = require('../util/funcs')
+const{FFLOGS_API_KEY, zone_43, zone_44, zone_30, zone_32, zone_38} = require('../util/variables')
 const { find_character } = require('./loadstone.js');
+const axios = require('axios');
+
 
 function incorrect_format(message){
     message.channel.send("Incorrect format").then(d_msg => {d_msg.delete({ timeout: 60000 });});
@@ -47,7 +49,7 @@ async function fetch_logs(message, name, server, zone=-1, encounterID=-1, partit
   if(partition){
       URL += `partition=${partition}`;
   }
-  URL += `&timeframe=${timeframe}&api_key=${process.env.FFLOGS_API_KEY}`;
+  URL += `&timeframe=${timeframe}&api_key=${FFLOGS_API_KEY}`;
   try {
       //console.log(URL);
       return await axios.get(URL);    

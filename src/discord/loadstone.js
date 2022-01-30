@@ -1,9 +1,10 @@
-require('dotenv').config({path: "C:/Users/zc470/Desktop/Extra/Discord-bot/.env"});
-const {server_list,timeout_send,help, data_centers, server_regions, dc_server, region_dc} = require('./Classes.js');
+const{timeout_send, help} = require('../util/funcs')
+const{LOADSTONE_PRIVATE_KEY, server_list, data_centers, server_regions, dc_server, region_dc} = require('../util/variables')
+
 const axios = require('axios');
 
 
-let loadstone_private_key = `&private_key=${process.env.LOADSTONE_PRIVATE_KEY}`;
+let loadstone_private_key = `&private_key=${LOADSTONE_PRIVATE_KEY}`;
 function add_private_key(URL) {return URL + loadstone_private_key;};
 
 

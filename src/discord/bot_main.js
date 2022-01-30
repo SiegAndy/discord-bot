@@ -1,12 +1,19 @@
-require('dotenv').config(__dirname + '/.env');
-const {timeout_send, help} = require('./Classes.js');
+
+const {timeout_send, help} = require('../util/funcs');
+const {prefix, DISCORD_TEST_APP_API_KEY} = require('../util/variables');
+
+const {create_user, link_ff14, card, check_rank, find_character} = require('./filesystem');
+const {loadstone_character_pic} = require('./web_crawler');
+const {act_auto} = require('./act_auto_fflogs')
+const {reserve} = require('./library')
+// const {local_relay} = require('./relay.js');
+
 const {Client, Intents} = require('discord.js');
-const cmds = require('./commands.js');
-const WC = require('./web_crawler.js');
-const hello = 'hello'
+
+
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 //client.msgs = require("./msgs.json"); using json for data storage, replacing by PostgreSQL
-const prefix = "!";
+
 
 client.on('ready', () => {
 	console.log('Ready!');
@@ -29,7 +36,7 @@ client.on('message', message => {
 		if(message.author.bot){
 			switch(cmdmsg[0].toLowerCase()){
 				case 'auto':
-					cmds.act_auto(message);
+					act_auto(message);
 					break;
 				default:
 				//message.channel.send("Unkonwn comamnd line.");
@@ -41,63 +48,68 @@ client.on('message', message => {
 		else{
 			switch(cmdmsg[0].toLowerCase()){
 				case "help": 
-					cmds.help_cmd(message);
+					help(message);
 					break;
 				case "random": 				
-					if(cmdmsg.length === 1){cmds.random(message);}
-					else if(cmdmsg.length === 2){cmds.randomNumber(message, cmdmsg[1]);}
-					else{help(message);}
+					if(cmdmsg.length === 1){
+						message.channel.send(Math.round(Math.random()*1000));
+					}
+					else if(cmdmsg.length === 2){
+						message.channel.send(Math.round(Math.random()*number));
+					}
+					else{
+						help(message);
+					}
 					break;
 				case "create":
-					cmds.create_user(message);
+					create_user(message);
 					break;
 				case "link":
-					cmds.link_ff14(message);
+					link_ff14(message);
 					break;
 				case "whoami":
-					cmds.card(message);
+					card(message);
 					break;			
 				case "fflogs":
-					cmds.check_rank(message);
+					check_rank(message);
 					break; 
 				case "find":
-					cmds.find_character(message);
+					find_character(message);
 					break;
 				case "load":
 					timeout_send(message, "You are not supposed to use this command!")
-					WC.loadstone_character_pic(2138764);
+					loadstone_character_pic(2138764);
 					break;
 				case "auto":// supposed to check discord user's ff14 info if linked 
-					cmds.act_auto(message);
-					// cmds.auto_check_party_member(message);
+					act_auto(message);
 					break;
 				// case "relay": // under construction
-				// 	// cmds.local_relay(message);
+				// 	// local_relay(message);
 				// 	break;
 				case "m":
 					timeout_send(message, `!market Aether ${message.content.slice(3)}`)
 					break;
 				case "test":
-					cmds.test(message);
+					console.log(message.author);
 					break;
 				case "book":
-					cmds.book(message);
+					reserve(message);
 					break;
 				// case "write": 
-				// 	cmds.write(message, client.msgs);
+				// 	write(message, client.msgs);
 				// 	break;
 				// case "get": 
-				// 	if(cmdmsg.length === 1){cmds.get(message, client.msgs);}
-				// 	else if(cmdmsg.length === 2){cmds.get_withName(message, client.msgs);}
-				// 	else{cmds.help(message);}
+				// 	if(cmdmsg.length === 1){get(message, client.msgs);}
+				// 	else if(cmdmsg.length === 2){get_withName(message, client.msgs);}
+				// 	else{help(message);}
 				// 	break;
 				// case "remove":
 				// 	if(cmdmsg.length !== 2){
 				// 		timeout_send(message, "Illegal format. `~remove [index]` ")
-				// 		cmds.help(message);
+				// 		help(message);
 				// 		break;
 				// 	}
-				// 	cmds.remove(message, client.msgs, cmdmsg[1]);// need index of remove message
+				// 	remove(message, client.msgs, cmdmsg[1]);// need index of remove message
 				// 	break;
 	
 				default:
@@ -110,6 +122,7 @@ client.on('message', message => {
 	}
 });
 
-client.login(process.env.DISCORD_TEST_APP_API_KEY);
+client.login(DISCORD_TEST_APP_API_KEY);
 
+const hello = 'hello'
 exports.hello = hello;
