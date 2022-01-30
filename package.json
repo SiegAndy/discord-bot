@@ -26,9 +26,9 @@
     "naudiodon": "^2.2.4",
     "nodemon": "^2.0.15",
     "pg": "^8.6.0",
-    "sqlite3": "^5.0.2",
+    "qs": "^6.10.3",
+    "sqlite3": "^4.2.0",
     "tail": "^2.0.4"
   },
-  "devDependencies": {},
   "description": ""
 }

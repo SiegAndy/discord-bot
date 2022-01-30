@@ -33,6 +33,7 @@ app.post("/auto", async(req, res)=>{
     // message.content = `~auto ${body.character} ${body.webhook}`;
     // // console.log(message)
     // act_auto(message);
+    console.log('receiving request')
 
     act_auto(body).then((result)=>{
         res.status(200);
