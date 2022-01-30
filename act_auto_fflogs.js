@@ -65,13 +65,13 @@ async function act_auto(args){
         let player_server = undefined
         if(args['server']){
             player_server = args['server']
-            character[1] = character[1].slice(0, lname_server.length - player_server.length).filter(n=>n)
+            character[1] = character[1].slice(0, lname_server.length - player_server.length)
         }
         else{
             for (server in server_list){
                 if(lname_server.includes(server_list[server])){
                     player_server = server_list[server];
-                    character[1] = character[1].slice(0, lname_server.length - player_server.length).filter(n=>n)
+                    character[1] = character[1].slice(0, lname_server.length - player_server.length)
                 }    
             }
         }
