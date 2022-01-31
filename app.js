@@ -2,8 +2,8 @@ const express = require('express')
 const app = express();
 const axios = require('axios');
 
-const {act_auto} = require('../discord/act_auto_fflogs.js');
-const {hello} = require('../discord/bot_main.js');
+const {act_auto} = require('./src/discord/act_auto_fflogs.js');
+const {hello} = require('./src/discord/bot_main.js');
 const Port = process.env.PORT || 3000;
 
 app.use(express.static(__dirname + '/public'));
